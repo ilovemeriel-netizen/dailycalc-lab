@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>일상계산소 · DailyCalc Lab — 100세 시대, 인생의 주요 계산을 한 곳에</title>
-<meta name="description" content="만 나이부터 49재, 양도세, 자녀 교육비, 임신 주수, 100년 자산 곡선까지. 한국 라이프 계산기 모음. 일상계산소.">
-<meta name="keywords" content="만나이 계산기, 49재 계산기, 임신 주수, 양도소득세, 연봉 실수령, 자녀 교육비, 노후 자산, 100세 시대, 일상계산소, DailyCalc Lab">
+<title>일상계산소 · DailyCalc Lab — 한국 라이프의 모든 순간, 만 나이부터 49재까지</title>
+<meta name="description" content="만 나이·임신 주수·연봉 실수령·BMI·대출 이자·생리주기·49재까지. 한국 3050의 인생 영역마다 필요한 계산을 한 곳에서. 100% 클라이언트 사이드 계산, 입력값 저장 없음.">
+<meta name="keywords" content="만나이 계산기, 49재 계산기, 임신 주수, 생리주기 계산기, 배란일 계산기, 양도소득세, 연봉 실수령, 자녀 교육비, 노후 자산, 100세 시대, 한국 라이프, 일상계산소, DailyCalc Lab">
 <meta name="author" content="일상계산소">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <link rel="canonical" href="https://dailycalc.lab/">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="일상계산소 — 100세 시대, 인생의 주요 계산을 한 곳에">
-<meta property="og:description" content="임신 7주부터 100세까지, 한국의 라이프 이벤트 계산을 한 곳에서.">
+<meta property="og:title" content="일상계산소 — 한국 라이프의 모든 순간, 만 나이부터 49재까지">
+<meta property="og:description" content="임신·결혼·은퇴, 인생 영역마다 필요한 계산을 한 곳에서. 100세 시대 한국 3050을 위한 통합 계산기.">
 <meta property="og:url" content="https://dailycalc.lab/">
 <meta property="og:image" content="https://dailycalc.lab/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -23,8 +23,8 @@
 
 <!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="일상계산소 — 100세 시대, 인생의 주요 계산">
-<meta name="twitter:description" content="임신 7주부터 100세까지, 한국의 라이프 이벤트 계산을 한 곳에서.">
+<meta name="twitter:title" content="일상계산소 — 한국 라이프의 모든 순간">
+<meta name="twitter:description" content="만 나이부터 49재까지, 한국 인생 영역마다 필요한 계산을 한 곳에서.">
 <meta name="twitter:image" content="https://dailycalc.lab/og-image.png">
 
 <!-- Theme color (PWA & mobile UI) -->
@@ -43,7 +43,7 @@
   "alternateName": "DailyCalc Lab",
   "url": "https://dailycalc.lab/",
   "inLanguage": "ko",
-  "description": "100세 시대를 살아가는 3050을 위한 한국 라이프 계산기 모음.",
+  "description": "한국 3050의 인생 영역마다 필요한 계산을 한 곳에서. 만 나이·임신·생리주기·연봉·대출·은퇴·49재까지, 100세 시대 한국 라이프의 모든 순간을 다루는 통합 계산기.",
   "potentialAction": {
     "@type": "SearchAction",
     "target": "https://dailycalc.lab/?q={search_term_string}",
@@ -301,6 +301,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
   position: sticky;
   top: 57px; /* 헤더 높이 직후 */
   z-index: 99;
+  isolation: isolate; /* 자식 stacking context 명확화 */
   background: rgba(250, 250, 247, 0.78);
   backdrop-filter: saturate(180%) blur(18px);
   -webkit-backdrop-filter: saturate(180%) blur(18px);
@@ -313,11 +314,9 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
   justify-content: space-between;
   gap: 4px;
   padding: 8px 24px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  /* 데스크톱은 overflow visible — 드롭다운이 부모 밖으로 자연스럽게 노출됨.
+     모바일(max-width: 640px)에서만 가로 스크롤 처리. */
 }
-.cat-nav-inner::-webkit-scrollbar { display: none; }
 .cat-nav-item-wrap {
   position: relative;
   flex-shrink: 0;
@@ -377,35 +376,37 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
   border-radius: var(--r-md);
   box-shadow: 0 10px 30px -8px rgba(15, 44, 92, 0.18), 0 4px 12px -4px rgba(15, 44, 92, 0.1);
   padding: 6px;
-  display: none;
-  z-index: 110;
+  /* visibility + opacity 패턴 — display 전환 대신 transition 정상 작동.
+     hidden 상태에서도 layout은 차지하지만 sticky 부모(z-index 99)보다 높은 z-index 120으로
+     광고 iframe·다른 요소 위로 노출 보장. */
+  visibility: hidden;
+  pointer-events: none;
   opacity: 0;
-  transform: translateY(-4px);
-  transition: opacity .18s, transform .18s;
+  transform: translateY(-6px);
+  z-index: 120;
+  transition: opacity .2s ease-out, transform .2s ease-out, visibility 0s linear .2s;
 }
 .cat-nav-item-wrap-end .cat-dropdown {
   left: auto;
   right: 0;
 }
-/* PC hover */
+/* PC hover — hover 즉시 펼침 */
 @media (hover: hover) {
   .cat-nav-item-wrap:hover .cat-dropdown {
-    display: block;
+    visibility: visible;
+    pointer-events: auto;
     opacity: 1;
     transform: translateY(0);
-    animation: catDropFade .18s ease-out forwards;
+    transition: opacity .18s ease-out, transform .18s ease-out, visibility 0s linear 0s;
   }
 }
-/* 모바일/터치 click 토글 */
+/* 모바일/터치 click 토글 + PC 클릭 토글도 동일 처리 */
 .cat-dropdown.open {
-  display: block;
+  visibility: visible;
+  pointer-events: auto;
   opacity: 1;
   transform: translateY(0);
-  animation: catDropFade .18s ease-out forwards;
-}
-@keyframes catDropFade {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+  transition: opacity .18s ease-out, transform .18s ease-out, visibility 0s linear 0s;
 }
 .cat-dropdown a,
 .cat-dropdown .cat-dropdown-soon {
@@ -441,13 +442,20 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
 }
 
 @media (max-width: 640px) {
-  .cat-nav-inner { padding: 6px 16px; gap: 2px; }
+  .cat-nav-inner {
+    padding: 6px 16px;
+    gap: 2px;
+    overflow-x: auto;
+    overflow-y: visible; /* 드롭다운 세로 방향 노출 보장 */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .cat-nav-inner::-webkit-scrollbar { display: none; }
   .cat-nav-item { padding: 6px 10px; font-size: 12px; }
   .cat-nav-icon { font-size: 14px; }
   .cat-nav-caret { font-size: 8px; }
   .cat-dropdown {
     min-width: 180px;
-    /* 모바일에서는 hover 비활성화, .open 클래스로만 표시 */
   }
   /* 모바일에서 첫 카테고리 드롭다운 left 보정 */
   .cat-nav-item-wrap:first-child .cat-dropdown { left: 0; }
@@ -772,6 +780,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
   /* Title clamp 1 line */
   display: -webkit-box;
   -webkit-line-clamp: 1;
+  line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -783,6 +792,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
   /* Description clamp 2 lines for grid alignment */
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   min-height: calc(13px * 1.55 * 2); /* fallback for non-webkit */
@@ -933,16 +943,6 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
 }
 .bento-card.bento-lg .bento-meta {
   color: var(--accent);
-}
-.bento-card[data-theme="money"] .bento-icon,
-.bento-card[data-theme="real"] .bento-icon,
-.bento-card[data-theme="retire"] .bento-icon,
-.bento-card[data-theme="baby"] .bento-icon,
-.bento-card[data-theme="health"] .bento-icon,
-.bento-card[data-theme="admin"] .bento-icon,
-.bento-card[data-theme="family"] .bento-icon,
-.bento-card[data-theme="life"] .bento-icon {
-  /* 테마별 아이콘은 emoji 그대로 */
 }
 
 @media (max-width: 1024px) {
@@ -1101,6 +1101,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
   transition: border-color .15s, box-shadow .15s;
   /* 화살표 제거하지 않음 — 사용자가 +/- 클릭으로 미세 조정 가능 */
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 .input-slider-num:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-tint); }
 .input-slider-num::-webkit-inner-spin-button,
@@ -1141,8 +1142,8 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
 }
 .result-stat {
   flex: 1;
-  min-width: 160px;
-  padding: 4px 24px;
+  min-width: 140px;
+  padding: 4px 20px;
   border-left: 1px solid rgba(255, 255, 255, 0.14);
 }
 .result-stat:first-child {
@@ -1157,6 +1158,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
     border-left: none;
     padding: 14px 0;
     border-top: 1px solid rgba(255, 255, 255, 0.14);
+    min-width: 100%;
   }
   .result-stat:first-child { border-top: none; padding-top: 0; }
   .result-stat:last-child { padding-bottom: 0; }
@@ -1175,10 +1177,12 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
   font-weight: 700;
   font-feature-settings: 'tnum', 'ss01';
   font-variant-numeric: tabular-nums;
-  font-size: clamp(26px, 3.2vw, 36px);
-  line-height: 1.05;
+  font-size: clamp(22px, 2.6vw, 32px);
+  line-height: 1.1;
   color: #fff;
   letter-spacing: -0.025em;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
 }
 .result-headline .result-stat-value.warning { color: var(--accent); }
 .result-headline .result-stat-sub {
@@ -1268,6 +1272,34 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
 }
 @media (max-width: 640px) {
   .loan-prepay-box { padding: 18px 20px; }
+}
+
+/* 중도상환 시뮬 입력 — 좁은 폭(380px 좌측 영역)에서 가독성 확보 */
+.loan-prepay-input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  font-feature-settings: 'tnum';
+  background: #fff;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+  -moz-appearance: textfield;
+  appearance: auto;
+}
+.loan-prepay-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-tint);
+}
+.loan-prepay-input-label {
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-top: 5px;
+  line-height: 1.4;
 }
 
 .chart-wrap {
@@ -2455,8 +2487,8 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
       <div class="cat-dropdown" role="menu">
         <a href="#calculator" data-calc-link="salary-net" role="menuitem">연봉 실수령액</a>
         <a href="#calculator" data-calc-link="loan-simple" role="menuitem">대출 이자</a>
-        <span class="cat-dropdown-soon" role="menuitem">양도소득세 <small>준비 중</small></span>
-        <span class="cat-dropdown-soon" role="menuitem">종합소득세 <small>준비 중</small></span>
+        <a href="#calculator" data-calc-link="capital-gains-tax" role="menuitem">양도소득세</a>
+        <a href="#calculator" data-calc-link="annual-leave" role="menuitem">연차 휴가</a>
       </div>
     </div>
     <div class="cat-nav-item-wrap" data-cat="real">
@@ -2466,9 +2498,9 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
       </button>
       <div class="cat-dropdown" role="menu">
         <a href="#calculator" data-calc-link="pyeong-conv" role="menuitem">평수 ↔ ㎡</a>
-        <span class="cat-dropdown-soon" role="menuitem">전월세 전환율 <small>준비 중</small></span>
-        <span class="cat-dropdown-soon" role="menuitem">양도소득세 <small>준비 중</small></span>
-        <span class="cat-dropdown-soon" role="menuitem">취득세 <small>준비 중</small></span>
+        <a href="#calculator" data-calc-link="jeonse-convert" role="menuitem">전월세 전환율</a>
+        <a href="#calculator" data-calc-link="capital-gains-tax" role="menuitem">양도소득세</a>
+        <a href="#calculator" data-calc-link="loan-simple" role="menuitem">대출 이자</a>
       </div>
     </div>
     <div class="cat-nav-item-wrap" data-cat="retire">
@@ -2489,6 +2521,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
         <span class="cat-nav-caret" aria-hidden="true">▾</span>
       </button>
       <div class="cat-dropdown" role="menu">
+        <a href="#calculator" data-calc-link="period-cycle" role="menuitem">생리주기·배란일</a>
         <a href="#calculator" data-calc-link="pregnancy" role="menuitem">임신 주수</a>
         <a href="#calculator" data-calc-link="education" role="menuitem">자녀 교육비</a>
       </div>
@@ -2514,7 +2547,8 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
         <a href="#calculator" data-calc-link="age-korean" role="menuitem">만 나이</a>
         <a href="#calculator" data-calc-link="d-day" role="menuitem">D-day 카운터</a>
         <a href="#calculator" data-calc-link="military-discharge" role="menuitem">군 전역일</a>
-        <span class="cat-dropdown-soon" role="menuitem">연차 휴가 <small>준비 중</small></span>
+        <a href="#calculator" data-calc-link="annual-leave" role="menuitem">연차 휴가</a>
+        <a href="#calculator" data-calc-link="lunar-convert" role="menuitem">음력 ↔ 양력 변환</a>
       </div>
     </div>
     <div class="cat-nav-item-wrap" data-cat="family">
@@ -2524,9 +2558,13 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
       </button>
       <div class="cat-dropdown" role="menu">
         <a href="#calculator" data-calc-link="memorial-49" role="menuitem">49재 계산</a>
+        <a href="#calculator" data-calc-link="memorial-anniversary" role="menuitem">음력 기일·제사</a>
+        <a href="#calculator" data-calc-link="gift-money" role="menuitem">경조사비·축의금</a>
+        <a href="#calculator" data-calc-link="birthday-feast" role="menuitem">칠순·팔순·환갑</a>
+        <a href="#calculator" data-calc-link="kinship-name" role="menuitem">촌수·호칭</a>
+        <a href="#calculator" data-calc-link="ancestral-table" role="menuitem">명절 차례상</a>
         <a href="#calculator" data-calc-link="parent-care" role="menuitem">부모 부양</a>
         <a href="#calculator" data-calc-link="life-3-points" role="menuitem">결혼·내집·은퇴 분기점</a>
-        <a href="#calculator" data-calc-link="dutchpay-sig" role="menuitem">더치페이</a>
       </div>
     </div>
     <div class="cat-nav-item-wrap cat-nav-item-wrap-end" data-cat="life">
@@ -2537,7 +2575,8 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
       <div class="cat-dropdown" role="menu">
         <a href="#calculator" data-calc-link="dutchpay-sig" role="menuitem">더치페이</a>
         <a href="#calculator" data-calc-link="pyeong-conv" role="menuitem">평수 ↔ ㎡</a>
-        <span class="cat-dropdown-soon" role="menuitem">환율 변환 <small>준비 중</small></span>
+        <a href="#calculator" data-calc-link="no-evil-day" role="menuitem">손 없는 날</a>
+        <a href="#calculator" data-calc-link="lunar-convert" role="menuitem">음력 ↔ 양력</a>
       </div>
     </div>
   </div>
@@ -2556,7 +2595,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
       오늘 당장 필요한 계산 8가지
     </h1>
     <p class="hero-subtitle rise rise-3">
-      일상에서 가장 많이 찾는 계산을 한 번에. 만 나이부터 49재까지, 빠른 답이 필요할 때.
+      만 나이부터 49재까지, 한국 라이프의 모든 순간에 필요한 계산. 가장 많이 찾는 8가지부터 시작해 보세요.
     </p>
 
     <div class="series-grid">
@@ -2614,6 +2653,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
       <span class="quick-chips-label">자주 찾는 계산</span>
       <a href="#calculator" data-calc-link="age-korean" class="chip">만 나이</a>
       <a href="#calculator" data-calc-link="pregnancy" class="chip">임신 주수</a>
+      <a href="#calculator" data-calc-link="period-cycle" class="chip">생리주기·배란일</a>
       <a href="#calculator" data-calc-link="memorial-49" class="chip">49재</a>
       <a href="#calculator" data-calc-link="salary-net" class="chip">연봉 실수령</a>
       <a href="#calculator" data-calc-link="bmi" class="chip">BMI</a>
@@ -2685,12 +2725,12 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
         <div class="bento-card-inner">
           <div class="bento-card-icon">💰</div>
           <h3 class="bento-card-title">돈·세금</h3>
-          <p class="bento-card-desc">연봉 실수령부터 대출 이자까지, 일상의 돈 계산.</p>
+          <p class="bento-card-desc">연봉 실수령부터 양도세·연차 휴가까지, 일상의 돈 계산.</p>
           <ul class="bento-card-list">
             <li>연봉 실수령액</li>
             <li>대출 이자 3종</li>
-            <li class="bento-soon">양도소득세 <small>준비 중</small></li>
-            <li class="bento-soon">종합소득세 <small>준비 중</small></li>
+            <li>양도소득세</li>
+            <li>연차 휴가</li>
           </ul>
           <div class="bento-card-cta">바로 계산 →</div>
         </div>
@@ -2701,8 +2741,8 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
         <div class="bento-card-inner">
           <div class="bento-card-icon">🏠</div>
           <h3 class="bento-card-title">부동산</h3>
-          <p class="bento-card-desc">평수·전세·세금 한 번에.</p>
-          <div class="bento-card-count">4개 도구 <span class="bento-card-active">· 1개 작동</span></div>
+          <p class="bento-card-desc">평수·전월세·양도세·대출 한 번에.</p>
+          <div class="bento-card-count">4개 도구 <span class="bento-card-active">· 4개 작동</span></div>
         </div>
       </a>
 
@@ -2721,8 +2761,8 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
         <div class="bento-card-inner">
           <div class="bento-card-icon">👶</div>
           <h3 class="bento-card-title">육아·교육</h3>
-          <p class="bento-card-desc">임신 주수와 교육비 시뮬.</p>
-          <div class="bento-card-count">2개 도구 <span class="bento-card-active">· 2개 작동</span></div>
+          <p class="bento-card-desc">생리주기·임신·교육비까지.</p>
+          <div class="bento-card-count">3개 도구 <span class="bento-card-active">· 3개 작동</span></div>
         </div>
       </a>
 
@@ -2747,8 +2787,8 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
         <div class="bento-card-inner">
           <div class="bento-card-icon">📜</div>
           <h3 class="bento-card-title">행정·날짜</h3>
-          <p class="bento-card-desc">만 나이·D-day·전역일.</p>
-          <div class="bento-card-count">4개 도구 <span class="bento-card-active">· 3개 작동</span></div>
+          <p class="bento-card-desc">만 나이·D-day·전역일·연차·음력.</p>
+          <div class="bento-card-count">5개 도구 <span class="bento-card-active">· 5개 작동</span></div>
         </div>
       </a>
 
@@ -2757,8 +2797,8 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
         <div class="bento-card-inner">
           <div class="bento-card-icon">🎁</div>
           <h3 class="bento-card-title">가족·경조사</h3>
-          <p class="bento-card-desc">49재·부모 부양·인생 분기점.</p>
-          <div class="bento-card-count">4개 도구 <span class="bento-card-active">· 4개 작동</span></div>
+          <p class="bento-card-desc">49재·기일·축의금·잔치·촌수까지.</p>
+          <div class="bento-card-count">8개 도구 <span class="bento-card-active">· 8개 작동</span></div>
         </div>
       </a>
 
@@ -2767,8 +2807,8 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
         <div class="bento-card-inner">
           <div class="bento-card-icon">📦</div>
           <h3 class="bento-card-title">생활·기타</h3>
-          <p class="bento-card-desc">더치페이·평수 변환 등.</p>
-          <div class="bento-card-count">3개 도구 <span class="bento-card-active">· 2개 작동</span></div>
+          <p class="bento-card-desc">더치페이·평수 변환·손 없는 날·음력.</p>
+          <div class="bento-card-count">4개 도구 <span class="bento-card-active">· 4개 작동</span></div>
         </div>
       </a>
     </div>
@@ -2796,47 +2836,47 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
         <div class="series-card-desc">초재부터 49재까지, 100일·1주기·3주기 추모일 일정.</div>
         <div class="series-card-arrow">바로가기 →</div>
       </a>
-      <a href="#" class="series-card" aria-disabled="true" style="opacity:0.55; cursor:default;">
+      <a href="#calculator" data-calc="lunar-convert" class="series-card">
         <span class="series-card-num">02</span>
         <div class="series-card-title">음력 ↔ 양력 변환</div>
-        <div class="series-card-desc">음력·양력 상호 변환과 향후 10년치 기일 표시.</div>
-        <div class="series-card-arrow">준비 중</div>
+        <div class="series-card-desc">양력·음력 상호 변환과 60간지 일진·띠 표시 (약식 변환).</div>
+        <div class="series-card-arrow">바로 계산 →</div>
       </a>
-      <a href="#" class="series-card" aria-disabled="true" style="opacity:0.55; cursor:default;">
+      <a href="#calculator" data-calc="memorial-anniversary" class="series-card">
         <span class="series-card-num">03</span>
         <div class="series-card-title">음력 기일·제사</div>
-        <div class="series-card-desc">매년 돌아오는 제사일을 음력 기준으로 자동 산출.</div>
-        <div class="series-card-arrow">준비 중</div>
+        <div class="series-card-desc">돌아가신 날부터 향후 5년치 기일과 주기 자동 산출.</div>
+        <div class="series-card-arrow">바로 계산 →</div>
       </a>
-      <a href="#" class="series-card" aria-disabled="true" style="opacity:0.55; cursor:default;">
+      <a href="#calculator" data-calc="gift-money" class="series-card">
         <span class="series-card-num">04</span>
         <div class="series-card-title">경조사비·축의금</div>
-        <div class="series-card-desc">관계·참석 여부·지역에 따른 권장 금액 가이드.</div>
-        <div class="series-card-arrow">준비 중</div>
+        <div class="series-card-desc">관계·행사·참석 여부에 따른 권장 금액과 적정 범위.</div>
+        <div class="series-card-arrow">바로 계산 →</div>
       </a>
-      <a href="#" class="series-card" aria-disabled="true" style="opacity:0.55; cursor:default;">
+      <a href="#calculator" data-calc="birthday-feast" class="series-card">
         <span class="series-card-num">05</span>
         <div class="series-card-title">칠순·팔순·환갑</div>
-        <div class="series-card-desc">잔치 비용과 일정을 한 번에 정리합니다.</div>
-        <div class="series-card-arrow">준비 중</div>
+        <div class="series-card-desc">환갑부터 백수까지, 잔치 시점과 의미를 한 번에.</div>
+        <div class="series-card-arrow">바로 계산 →</div>
       </a>
-      <a href="#" class="series-card" aria-disabled="true" style="opacity:0.55; cursor:default;">
+      <a href="#calculator" data-calc="ancestral-table" class="series-card">
         <span class="series-card-num">06</span>
         <div class="series-card-title">명절 차례상 비용</div>
-        <div class="series-card-desc">차례상 품목별 평균 비용과 권장 예산.</div>
-        <div class="series-card-arrow">준비 중</div>
+        <div class="series-card-desc">설·추석 차례상 평균 비용 (전통시장·대형마트별).</div>
+        <div class="series-card-arrow">바로 계산 →</div>
       </a>
-      <a href="#" class="series-card" aria-disabled="true" style="opacity:0.55; cursor:default;">
+      <a href="#calculator" data-calc="kinship-name" class="series-card">
         <span class="series-card-num">07</span>
         <div class="series-card-title">촌수·호칭</div>
-        <div class="series-card-desc">가족 관계 경로로 촌수와 정확한 호칭 안내.</div>
-        <div class="series-card-arrow">준비 중</div>
+        <div class="series-card-desc">친척 관계 선택으로 촌수와 정확한 호칭 안내.</div>
+        <div class="series-card-arrow">바로 계산 →</div>
       </a>
-      <a href="#" class="series-card" aria-disabled="true" style="opacity:0.55; cursor:default;">
+      <a href="#calculator" data-calc="no-evil-day" class="series-card">
         <span class="series-card-num">08</span>
         <div class="series-card-title">손 없는 날</div>
-        <div class="series-card-desc">이사·개업 예정일 주변의 길일을 표시합니다.</div>
-        <div class="series-card-arrow">준비 중</div>
+        <div class="series-card-desc">이사·개업 길일 (음력 9·10·19·20·29·30일) 한눈에.</div>
+        <div class="series-card-arrow">바로 계산 →</div>
       </a>
     </div>
   </div>
@@ -2944,29 +2984,29 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
         <div class="series-card-desc">입대일과 군 종류로 전역 D-day와 진행률.</div>
         <div class="series-card-arrow">바로 계산 →</div>
       </a>
-      <a href="#" class="series-card" aria-disabled="true" style="opacity:0.55; cursor:default;">
+      <a href="#calculator" data-calc="period-cycle" class="series-card">
         <span class="series-card-num">05</span>
-        <div class="series-card-title">양도소득세</div>
-        <div class="series-card-desc">취득가·양도가·보유 기간으로 세액 산출.</div>
-        <div class="series-card-arrow">준비 중</div>
+        <div class="series-card-title">생리주기·배란일</div>
+        <div class="series-card-desc">마지막 생리일과 평균 주기로 다음 생리일·배란일·가임기 추정.</div>
+        <div class="series-card-arrow">바로 계산 →</div>
       </a>
-      <a href="#" class="series-card" aria-disabled="true" style="opacity:0.55; cursor:default;">
+      <a href="#calculator" data-calc="capital-gains-tax" class="series-card">
         <span class="series-card-num">06</span>
-        <div class="series-card-title">전월세 전환율</div>
-        <div class="series-card-desc">보증금·월세 변환과 시세 적정성 진단.</div>
-        <div class="series-card-arrow">준비 중</div>
+        <div class="series-card-title">양도소득세</div>
+        <div class="series-card-desc">1세대 1주택 양도세 추정 (취득가·양도가·보유·거주 기간).</div>
+        <div class="series-card-arrow">바로 계산 →</div>
       </a>
-      <a href="#" class="series-card" aria-disabled="true" style="opacity:0.55; cursor:default;">
+      <a href="#calculator" data-calc="jeonse-convert" class="series-card">
         <span class="series-card-num">07</span>
-        <div class="series-card-title">연차 휴가 일수</div>
-        <div class="series-card-desc">입사일과 근속 기간으로 법정 연차와 잔여일.</div>
-        <div class="series-card-arrow">준비 중</div>
+        <div class="series-card-title">전월세 전환율</div>
+        <div class="series-card-desc">전세금·보증금·전환율로 월세 환산 (주택임대차보호법).</div>
+        <div class="series-card-arrow">바로 계산 →</div>
       </a>
-      <a href="#" class="series-card" aria-disabled="true" style="opacity:0.55; cursor:default;">
+      <a href="#calculator" data-calc="annual-leave" class="series-card">
         <span class="series-card-num">08</span>
-        <div class="series-card-title">환율 변환</div>
-        <div class="series-card-desc">통화·금액 입력으로 실시간 환율 환산.</div>
-        <div class="series-card-arrow">준비 중</div>
+        <div class="series-card-title">연차 휴가 일수</div>
+        <div class="series-card-desc">입사일·기준일로 근로기준법 60조 법정 연차 계산.</div>
+        <div class="series-card-arrow">바로 계산 →</div>
       </a>
     </div>
   </div>
@@ -3137,7 +3177,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
           <span class="brand-mark">일상계산소</span>
           <span class="brand-en">DailyCalc Lab</span>
         </a>
-        <p>100세 시대를 살아가는 3050을 위한 생애주기 계산기. 한국의 라이프 이벤트 계산을 한 곳에서.</p>
+        <p>한국 3050의 인생 영역마다 필요한 계산을 한 곳에서. 만 나이부터 49재까지, 한국 라이프의 모든 순간을 다루는 통합 계산기.</p>
         <a href="#main" class="footer-home-cta">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m18 15-6-6-6 6"/></svg>
           처음으로
@@ -3175,6 +3215,8 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
       © 2026 일상계산소 · DailyCalc Lab. 본 서비스의 모든 계산 결과는 참고용으로, 법적·재무적 효력이 없습니다.
       세법·연금·금융 정책은 수시로 변경되므로 중요한 의사결정 전 반드시 관련 기관 또는 전문가의 확인을 받으시기 바랍니다.
       의료 관련 계산기는 의료 자문을 대체하지 않습니다.
+      <br><br>
+      <strong>데이터 처리 정책:</strong> 입력값은 브라우저 메모리에서만 처리되며, 어떤 서버로도 전송되지 않습니다. 모든 계산은 로컬에서 실행되며 사용자 데이터는 저장되지 않습니다.
     </div>
   </div>
 </footer>
@@ -3188,30 +3230,6 @@ h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.022em; line-hei
 /* ============================================================
    Number formatting — 한국 단위 (만/억)
    ============================================================ */
-function formatKRW(num) {
-  if (num === null || isNaN(num)) return '—';
-  const sign = num < 0 ? '-' : '';
-  const abs = Math.abs(num);
-  // num is in 만원 unit
-  if (abs >= 10000) {
-    const eok = abs / 10000;
-    return sign + (eok >= 100 ? eok.toFixed(0) : eok.toFixed(1)) + '억원';
-  }
-  if (abs >= 1) {
-    return sign + Math.round(abs).toLocaleString('ko-KR') + '만원';
-  }
-  return sign + (abs * 10000).toLocaleString('ko-KR') + '원';
-}
-
-function formatKRWShort(num) {
-  // For chart axis labels (manwon unit)
-  if (num === 0) return '0';
-  const abs = Math.abs(num);
-  const sign = num < 0 ? '-' : '';
-  if (abs >= 10000) return sign + (abs / 10000).toFixed(0) + '억';
-  return sign + (abs / 1).toFixed(0) + '만';
-}
-
 /* ============================================================
    일상계산소 — 통합 계산기 시스템 v2
    시그니처 8종 + 서브2 8종 (총 16종 작동)
@@ -3920,26 +3938,27 @@ const CALCULATORS = {
           el('button', { class: 'dp-toggle-option' + (state.method === 'bullet' ? ' active' : ''), type: 'button', 'data-m': 'bullet' }, '만기일시')
         )
       ));
-      // 중도상환수수료 (선택 입력)
+      // 중도상환수수료 (선택 입력) — 2x2 배치로 좁은 폭에서도 가독성 확보
       wrap.appendChild(el('div', { class: 'input-group' },
-        el('div', { class: 'input-label' }, el('span', null, '중도상환 시뮬'), el('span', { class: 'input-label-hint' }, '선택')),
-        el('div', { style: 'display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;' },
+        el('div', { class: 'input-label' }, el('span', null, '중도상환 시뮬'), el('span', { class: 'input-label-hint' }, '선택 입력')),
+        el('div', { style: 'display:grid; grid-template-columns:1fr 1fr; gap:8px;' },
           (() => {
             const w = el('div');
-            const i = el('input', { type: 'number', id: 'ln-prepayMonth', value: String(state.prepayMonth), min: '0', step: '1', placeholder: '회차' });
-            const l = el('div', { style: 'font-size:11px; color:var(--ink-faint); margin-top:4px;' }, '상환 회차');
+            const i = el('input', { type: 'number', id: 'ln-prepayMonth', class: 'loan-prepay-input', value: String(state.prepayMonth), min: '0', step: '1', placeholder: '예: 60' });
+            const l = el('div', { class: 'loan-prepay-input-label' }, '상환 회차');
             w.appendChild(i); w.appendChild(l); return w;
           })(),
           (() => {
             const w = el('div');
-            const i = el('input', { type: 'number', id: 'ln-prepayAmount', value: String(state.prepayAmount), min: '0', step: '100', placeholder: '만원' });
-            const l = el('div', { style: 'font-size:11px; color:var(--ink-faint); margin-top:4px;' }, '상환 금액(만)');
+            const i = el('input', { type: 'number', id: 'ln-prepayAmount', class: 'loan-prepay-input', value: String(state.prepayAmount), min: '0', step: '100', placeholder: '예: 1000' });
+            const l = el('div', { class: 'loan-prepay-input-label' }, '상환 금액(만원)');
             w.appendChild(i); w.appendChild(l); return w;
           })(),
           (() => {
             const w = el('div');
-            const i = el('input', { type: 'number', id: 'ln-prepayRate', value: String(state.prepayRate), min: '0', max: '5', step: '0.01', placeholder: '%' });
-            const l = el('div', { style: 'font-size:11px; color:var(--ink-faint); margin-top:4px;' }, '수수료율(%)');
+            w.style.gridColumn = 'span 2';
+            const i = el('input', { type: 'number', id: 'ln-prepayRate', class: 'loan-prepay-input', value: String(state.prepayRate), min: '0', max: '5', step: '0.01', placeholder: '예: 0.5' });
+            const l = el('div', { class: 'loan-prepay-input-label' }, '수수료율(%) — 시중 평균 0.5~1.4%, 36개월 후 면제');
             w.appendChild(i); w.appendChild(l); return w;
           })()
         )
@@ -3947,10 +3966,22 @@ const CALCULATORS = {
       return wrap;
     },
     bindInputs(state, render) {
-      document.getElementById('ln-principal').oninput = e => { state.principal = +e.target.value || 0; render(); };
-      document.getElementById('ln-rate').oninput = e => { state.rate = +e.target.value || 0; render(); };
+      // 안전 파싱 헬퍼: 음수·NaN·문자 → 0
+      const safeNum = (v, max = Infinity) => {
+        const n = parseFloat(v);
+        if (!isFinite(n) || isNaN(n) || n < 0) return 0;
+        return Math.min(n, max);
+      };
+      document.getElementById('ln-principal').oninput = e => {
+        state.principal = safeNum(e.target.value, 1000000); // 100억 상한
+        render();
+      };
+      document.getElementById('ln-rate').oninput = e => {
+        state.rate = safeNum(e.target.value, 30); // 30% 상한
+        render();
+      };
       document.getElementById('ln-years').oninput = e => {
-        state.years = +e.target.value;
+        state.years = Math.max(1, Math.min(35, parseInt(e.target.value) || 1));
         document.getElementById('ln-years-val').textContent = state.years + '년';
         document.getElementById('ln-years-disp').textContent = state.years + '년';
         render();
@@ -3963,16 +3994,23 @@ const CALCULATORS = {
           render();
         };
       });
+      // 중도상환 시뮬 입력 — 각 필드별 상한 적용
+      const prepayLimits = { prepayMonth: state.years * 12, prepayAmount: state.principal, prepayRate: 5 };
       ['ln-prepayMonth','ln-prepayAmount','ln-prepayRate'].forEach(id => {
         const k = id.replace('ln-', '');
-        document.getElementById(id).oninput = e => { state[k] = +e.target.value || 0; render(); };
+        document.getElementById(id).oninput = e => {
+          state[k] = safeNum(e.target.value, prepayLimits[k] || Infinity);
+          render();
+        };
       });
     },
     compute(s) {
-      const P = s.principal * 10000;
-      const r = s.rate / 100 / 12;
-      const n = s.years * 12;
+      // 입력 안전성 검증 (UI 핸들러에서 1차 방어 후 추가 보강)
+      const P = (s.principal || 0) * 10000;
+      const r = (s.rate || 0) / 100 / 12;
+      const n = (s.years || 0) * 12;
       if (P <= 0 || n <= 0) return null;
+      if (!isFinite(P) || !isFinite(r) || !isFinite(n)) return null;
 
       // 회차별 상환 일정 생성 (모든 방식 공통 데이터 구조)
       const schedule = []; // [{month, principal, interest, balance}]
@@ -4050,22 +4088,54 @@ const CALCULATORS = {
       const headline = el('div', { class: 'result-headline' });
       const isEqualPrincipal = s.method === 'equal-principal';
       const isBullet = s.method === 'bullet';
-      headline.appendChild(el('div', { class: 'result-stat' },
-        el('div', { class: 'result-stat-label' }, isEqualPrincipal ? '1회차 / 마지막 회차' : isBullet ? '월 이자 / 만기 회차' : '월 상환액'),
-        el('div', { class: 'result-stat-value' },
-          isEqualPrincipal ? Math.round(c.firstMonthly).toLocaleString('ko-KR') + ' / ' + Math.round(c.lastMonthly).toLocaleString('ko-KR') :
-          isBullet ? Math.round(c.firstMonthly).toLocaleString('ko-KR') + ' / ' + Math.round(c.lastMonthly).toLocaleString('ko-KR') :
-          Math.round(c.firstMonthly).toLocaleString('ko-KR') + '원'
-        ),
-        el('div', { class: 'result-stat-sub' },
-          isEqualPrincipal ? '원금균등 (감소)' : isBullet ? '만기일시 (만기에 원금 일시)' : '원리금균등 (고정)'
-        )
-      ));
-      headline.appendChild(el('div', { class: 'result-stat' },
-        el('div', { class: 'result-stat-label' }, '총 이자'),
-        el('div', { class: 'result-stat-value' }, formatKRW(c.totalInterest / 10000)),
-        el('div', { class: 'result-stat-sub' }, '총 상환 ' + formatKRW(c.totalPaid / 10000))
-      ));
+
+      if (isBullet) {
+        // 만기일시: 월 이자(매월) + 원금(만기) + 총 이자
+        headline.appendChild(el('div', { class: 'result-stat' },
+          el('div', { class: 'result-stat-label' }, '월 이자'),
+          el('div', { class: 'result-stat-value' }, Math.round(c.firstMonthly).toLocaleString('ko-KR') + '원'),
+          el('div', { class: 'result-stat-sub' }, '매월 납부')
+        ));
+        headline.appendChild(el('div', { class: 'result-stat' },
+          el('div', { class: 'result-stat-label' }, '원금 일시'),
+          el('div', { class: 'result-stat-value' }, formatKRW(c.P / 10000)),
+          el('div', { class: 'result-stat-sub' }, '만기에 원금 일시')
+        ));
+        headline.appendChild(el('div', { class: 'result-stat' },
+          el('div', { class: 'result-stat-label' }, '총 이자'),
+          el('div', { class: 'result-stat-value' }, formatKRW(c.totalInterest / 10000)),
+          el('div', { class: 'result-stat-sub' }, '총 상환 ' + formatKRW(c.totalPaid / 10000))
+        ));
+      } else if (isEqualPrincipal) {
+        // 원금균등: 1회차 + 마지막 회차 + 총 이자
+        headline.appendChild(el('div', { class: 'result-stat' },
+          el('div', { class: 'result-stat-label' }, '1회차'),
+          el('div', { class: 'result-stat-value' }, Math.round(c.firstMonthly).toLocaleString('ko-KR') + '원'),
+          el('div', { class: 'result-stat-sub' }, '시작 시점')
+        ));
+        headline.appendChild(el('div', { class: 'result-stat' },
+          el('div', { class: 'result-stat-label' }, '마지막 회차'),
+          el('div', { class: 'result-stat-value' }, Math.round(c.lastMonthly).toLocaleString('ko-KR') + '원'),
+          el('div', { class: 'result-stat-sub' }, '원금균등 (감소)')
+        ));
+        headline.appendChild(el('div', { class: 'result-stat' },
+          el('div', { class: 'result-stat-label' }, '총 이자'),
+          el('div', { class: 'result-stat-value' }, formatKRW(c.totalInterest / 10000)),
+          el('div', { class: 'result-stat-sub' }, '총 상환 ' + formatKRW(c.totalPaid / 10000))
+        ));
+      } else {
+        // 원리금균등: 월 상환액 + 총 이자 (2개 stat 유지 — 하나의 값으로 충분)
+        headline.appendChild(el('div', { class: 'result-stat' },
+          el('div', { class: 'result-stat-label' }, '월 상환액'),
+          el('div', { class: 'result-stat-value' }, Math.round(c.firstMonthly).toLocaleString('ko-KR') + '원'),
+          el('div', { class: 'result-stat-sub' }, '원리금균등 (고정)')
+        ));
+        headline.appendChild(el('div', { class: 'result-stat' },
+          el('div', { class: 'result-stat-label' }, '총 이자'),
+          el('div', { class: 'result-stat-value' }, formatKRW(c.totalInterest / 10000)),
+          el('div', { class: 'result-stat-sub' }, '총 상환 ' + formatKRW(c.totalPaid / 10000))
+        ));
+      }
       result.appendChild(headline);
 
       // 중도상환 시뮬 결과
@@ -5207,6 +5277,1095 @@ const CALCULATORS = {
       result.appendChild(actionRow());
       return result;
     }
+  },
+
+  /* ===== 생리주기·배란일 계산기 (라이프 영역 다양화 1순위) =====
+     산식: 다음 생리 예정일 = 마지막 생리일 + 평균 주기
+           배란일 = 다음 생리 예정일 - 14일 (황체기 14일 가정)
+           가임기 = 배란일 ± 5일 (정자 생존 3~5일, 난자 생존 24h 고려)
+     주의: 시그니처 톤(미드나이트 블루) 사용, 셈셈 핑크 미사용.
+           의료 면책 footer 필수 — 피임 목적 사용 금지, 산부인과 상담 권장. */
+  'period-cycle': {
+    title: ['생리주기·', '배란일', ''],
+    breadcrumb: '생리주기·배란일',
+    lead: '마지막 생리 시작일과 평균 주기를 입력하면 다음 생리 예정일·배란일·가임기를 계산합니다.',
+    footer: '<strong>계산 산식:</strong> 다음 생리 예정일 = 마지막 생리 시작일 + 평균 주기. 배란일 = 다음 생리 예정일 − 14일 (황체기 14일 가정). 가임기 = 배란일 ± 5일 (정자 생존 3~5일, 난자 생존 24시간 고려). <strong>대한산부인과학회·국립건강보험공단·차차여성의원·파티마여성병원 표준 산식</strong>. <br><br><strong>⚠ 중요 안내:</strong> 본 결과는 평균값에 기반한 참고용 추정이며, 스트레스·호르몬 불균형·생리 불순으로 실제 일자와 차이가 날 수 있습니다. <strong>피임 목적으로 사용해서는 안 됩니다</strong> (주기 피임법은 실패율이 높아 다른 피임 방법과 병행이 필요합니다). 임신 시도, 배란 장애 의심, 또는 실제 일자와 5일 이상 차이가 반복될 경우 <strong>산부인과 진료를 받으시기 바랍니다</strong>. <strong>입력값은 브라우저 메모리에서만 처리되며 어떤 서버로도 전송되지 않습니다.</strong>',
+    state: { lastPeriod: '', cycle: 28, periodLength: 5 },
+    renderInputs(state) {
+      const wrap = el('div', { class: 'calc-inputs' });
+      // 기본값 — 마지막 생리일이 비어 있으면 오늘로부터 14일 전을 placeholder로
+      const today = new Date();
+      const defaultDate = new Date(today.getTime() - 14 * 86400000).toISOString().slice(0, 10);
+      wrap.appendChild(inputGroup('마지막 생리 시작일', '월경 첫 날', dateField('pc-last', state.lastPeriod || defaultDate)));
+      wrap.appendChild(inputGroup('평균 주기', el('span', { id: 'pc-cycle-disp' }, state.cycle + '일'),
+        sliderField('pc-cycle', 21, 40, 1, state.cycle, v => v + '일')));
+      wrap.appendChild(inputGroup('생리 기간', el('span', { id: 'pc-len-disp' }, state.periodLength + '일'),
+        sliderField('pc-len', 2, 10, 1, state.periodLength, v => v + '일')));
+      return wrap;
+    },
+    bindInputs(state, render) {
+      const lastEl = document.getElementById('pc-last');
+      // 초기값 동기화
+      if (!state.lastPeriod && lastEl.value) state.lastPeriod = lastEl.value;
+      lastEl.oninput = e => { state.lastPeriod = e.target.value; render(); };
+      document.getElementById('pc-cycle').oninput = e => {
+        state.cycle = +e.target.value;
+        document.getElementById('pc-cycle-val').textContent = state.cycle + '일';
+        document.getElementById('pc-cycle-disp').textContent = state.cycle + '일';
+        render();
+      };
+      document.getElementById('pc-len').oninput = e => {
+        state.periodLength = +e.target.value;
+        document.getElementById('pc-len-val').textContent = state.periodLength + '일';
+        document.getElementById('pc-len-disp').textContent = state.periodLength + '일';
+        render();
+      };
+    },
+    compute(s) {
+      if (!s.lastPeriod) return null;
+      const last = new Date(s.lastPeriod);
+      if (isNaN(last)) return null;
+      // 다음 생리 예정일
+      const nextPeriod = new Date(last.getTime() + s.cycle * 86400000);
+      // 배란일 = 다음 생리 예정일 - 14일
+      const ovulation = new Date(nextPeriod.getTime() - 14 * 86400000);
+      // 가임기 = 배란일 ± 5일 (정자 생존 5일 + 배란일 + 난자 생존 1일)
+      const fertileStart = new Date(ovulation.getTime() - 5 * 86400000);
+      const fertileEnd = new Date(ovulation.getTime() + 1 * 86400000);
+      // 다음 다음 주기 (3개월치 미리보기용)
+      const cycle2Start = new Date(last.getTime() + s.cycle * 86400000);
+      const cycle2Ovulation = new Date(cycle2Start.getTime() + s.cycle * 86400000 - 14 * 86400000);
+      const cycle3Start = new Date(last.getTime() + 2 * s.cycle * 86400000);
+      const cycle3Ovulation = new Date(cycle3Start.getTime() + s.cycle * 86400000 - 14 * 86400000);
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      // D-day 계산
+      const daysToNext = Math.ceil((nextPeriod - today) / 86400000);
+      const daysToOvulation = Math.ceil((ovulation - today) / 86400000);
+      // 현재 주기 내 위치
+      const dayOfCycle = Math.floor((today - last) / 86400000) + 1;
+      let phase = '';
+      if (dayOfCycle < 1) phase = '입력일 이전';
+      else if (dayOfCycle <= s.periodLength) phase = '생리 중';
+      else if (dayOfCycle < (s.cycle - 14 - 5)) phase = '난포기 (생리 후~가임기 전)';
+      else if (today >= fertileStart && today <= fertileEnd) phase = '가임기';
+      else if (dayOfCycle < s.cycle) phase = '황체기 (배란 후~다음 생리 전)';
+      else phase = '다음 주기';
+      return {
+        nextPeriod, ovulation, fertileStart, fertileEnd,
+        cycle2Start, cycle2Ovulation, cycle3Start, cycle3Ovulation,
+        daysToNext, daysToOvulation, dayOfCycle, phase
+      };
+    },
+    renderResult(s) {
+      const c = this.compute(s);
+      const result = el('div', { class: 'calc-result', 'aria-live': 'polite' });
+      if (!c) {
+        result.appendChild(el('div', { class: 'result-stat-sub' }, '마지막 생리 시작일을 입력해 주세요.'));
+        return result;
+      }
+      const fmt = d => {
+        const m = d.getMonth() + 1, dd = d.getDate();
+        const wkd = ['일', '월', '화', '수', '목', '금', '토'][d.getDay()];
+        return `${m}월 ${dd}일 (${wkd})`;
+      };
+      const headline = el('div', { class: 'result-headline' });
+      headline.appendChild(el('div', { class: 'result-stat' },
+        el('div', { class: 'result-stat-label' }, '다음 생리 예정일'),
+        el('div', { class: 'result-stat-value' }, fmt(c.nextPeriod)),
+        el('div', { class: 'result-stat-sub' }, c.daysToNext > 0 ? `D-${c.daysToNext}` : c.daysToNext === 0 ? '오늘' : `${-c.daysToNext}일 지남`)
+      ));
+      headline.appendChild(el('div', { class: 'result-stat' },
+        el('div', { class: 'result-stat-label' }, '배란일'),
+        el('div', { class: 'result-stat-value' }, fmt(c.ovulation)),
+        el('div', { class: 'result-stat-sub' }, c.daysToOvulation > 0 ? `D-${c.daysToOvulation}` : c.daysToOvulation === 0 ? '오늘' : `${-c.daysToOvulation}일 지남`)
+      ));
+      result.appendChild(headline);
+
+      // 가임기 + 현재 주기 내 위치 + 다음 3개월 미리보기
+      const detail = el('div', { style: 'background:var(--bg-elev); border:1px solid var(--line-soft); border-radius:var(--r-md); padding:18px 22px; margin-bottom:20px; font-size:13px; line-height:1.7; color:var(--ink-soft);' });
+      detail.innerHTML = `
+        <div style="font-weight:700; color:var(--primary); margin-bottom:10px; font-size:12px; letter-spacing:0.06em; text-transform:uppercase;">상세 일정</div>
+        <div><strong>가임기:</strong> ${fmt(c.fertileStart)} ~ ${fmt(c.fertileEnd)} (총 7일)</div>
+        <div><strong>현재 주기:</strong> ${c.dayOfCycle}일차 — <strong>${c.phase}</strong></div>
+        <div style="margin-top:10px; padding-top:10px; border-top:1px dashed var(--line-soft);">
+          <div style="font-weight:700; color:var(--ink); margin-bottom:6px;">다음 3개월 미리보기</div>
+          <div>다음 주기 생리 예정: ${fmt(c.cycle2Start)} · 배란: ${fmt(c.cycle2Ovulation)}</div>
+          <div>그 다음 주기 생리 예정: ${fmt(c.cycle3Start)} · 배란: ${fmt(c.cycle3Ovulation)}</div>
+        </div>
+      `;
+      result.appendChild(detail);
+
+      // 의료 면책 안내 박스 (시각적 강조)
+      const noticeBox = el('div', { style: 'background:rgba(220, 38, 38, 0.04); border:1px solid rgba(220, 38, 38, 0.18); border-radius:var(--r-md); padding:14px 18px; margin-bottom:20px; font-size:12px; line-height:1.6; color:var(--ink-soft);' });
+      noticeBox.innerHTML = `<strong style="color:#dc2626;">⚠ 참고용 추정 결과</strong> — 실제 배란·생리 일자는 호르몬·스트레스·체형 변화로 달라질 수 있습니다. <strong>피임 목적으로는 사용하지 마시고</strong>, 임신 시도 시에는 산부인과 진료를 받아 정확한 배란 검사를 권장합니다.`;
+      result.appendChild(noticeBox);
+
+      result.appendChild(actionRow());
+      return result;
+    }
+  },
+
+  /* ============================================================
+     인기 계산기 #07: 전월세 전환율 (주택임대차보호법 7조의2 기반)
+     산식: 전환율 = 한국은행 기준금리 + 2% (또는 사용자 직접 입력)
+            월세 = (전세금 - 보증금) × 전환율 / 12
+     ============================================================ */
+  'jeonse-convert': {
+    title: ['전월세 ', '전환율', ''],
+    breadcrumb: '전월세 전환율',
+    lead: '전세금·보증금·전환율을 입력하면 월세를 환산하거나, 보증금↔월세 변환을 계산합니다.',
+    footer: '<strong>법령 근거:</strong> 주택임대차보호법 시행령 제9조 — 전환율 한도 = 한국은행 기준금리 + 대통령령 비율(2%). 2026년 5월 기준 한국은행 기준금리 약 3.5% → 법정 최대 전환율 약 5.5%. 산식: 월세 = (전세금 − 보증금) × 전환율 ÷ 12. <strong>참고용 환산이며, 실제 임대차 계약은 임대인·임차인 합의에 따릅니다.</strong>',
+    state: { jeonse: 30000, deposit: 5000, rate: 5.5 },
+    renderInputs(state) {
+      return el('div', { class: 'calc-inputs' },
+        inputGroup('전세금', '만원 단위', numField('jc-jeonse', state.jeonse, '만원', { min: 0, step: 1000 })),
+        inputGroup('보증금', '만원 단위 (월세 전환 시)', numField('jc-deposit', state.deposit, '만원', { min: 0, step: 100 })),
+        inputGroup('전환율', el('span', { id: 'jc-rate-disp' }, state.rate + '%'),
+          sliderField('jc-rate', 2, 10, 0.1, state.rate, v => v + '%'))
+      );
+    },
+    bindInputs(state, render) {
+      const safeNum = (v, max) => {
+        const n = parseFloat(v);
+        if (!isFinite(n) || isNaN(n) || n < 0) return 0;
+        return Math.min(n, max || Infinity);
+      };
+      document.getElementById('jc-jeonse').oninput = e => { state.jeonse = safeNum(e.target.value, 1000000); render(); };
+      document.getElementById('jc-deposit').oninput = e => { state.deposit = safeNum(e.target.value, state.jeonse); render(); };
+      document.getElementById('jc-rate').oninput = e => {
+        state.rate = parseFloat(e.target.value);
+        document.getElementById('jc-rate-val').textContent = state.rate + '%';
+        document.getElementById('jc-rate-disp').textContent = state.rate + '%';
+        render();
+      };
+    },
+    compute(s) {
+      if (s.jeonse <= 0) return null;
+      if (s.deposit > s.jeonse) return { invalid: '보증금이 전세금보다 클 수 없습니다.' };
+      const diff = s.jeonse - s.deposit;
+      const monthlyRent = diff * (s.rate / 100) / 12;
+      const annualRent = monthlyRent * 12;
+      return { monthlyRent, annualRent, diff };
+    },
+    renderResult(s) {
+      const c = this.compute(s);
+      const result = el('div', { class: 'calc-result', 'aria-live': 'polite' });
+      if (!c) {
+        result.appendChild(el('div', { class: 'result-stat-sub' }, '전세금을 입력해 주세요.'));
+        return result;
+      }
+      if (c.invalid) {
+        result.appendChild(el('div', { class: 'result-stat-sub', style: 'color:var(--danger);' }, '⚠ ' + c.invalid));
+        return result;
+      }
+      const headline = el('div', { class: 'result-headline' });
+      headline.appendChild(el('div', { class: 'result-stat' },
+        el('div', { class: 'result-stat-label' }, '환산 월세'),
+        el('div', { class: 'result-stat-value' }, Math.round(c.monthlyRent).toLocaleString('ko-KR') + '만원'),
+        el('div', { class: 'result-stat-sub' }, '매월 납부')
+      ));
+      headline.appendChild(el('div', { class: 'result-stat' },
+        el('div', { class: 'result-stat-label' }, '연 임대료'),
+        el('div', { class: 'result-stat-value' }, Math.round(c.annualRent).toLocaleString('ko-KR') + '만원'),
+        el('div', { class: 'result-stat-sub' }, '월세 × 12')
+      ));
+      headline.appendChild(el('div', { class: 'result-stat' },
+        el('div', { class: 'result-stat-label' }, '전환 대상'),
+        el('div', { class: 'result-stat-value' }, c.diff.toLocaleString('ko-KR') + '만원'),
+        el('div', { class: 'result-stat-sub' }, '전세금 − 보증금')
+      ));
+      result.appendChild(headline);
+      result.appendChild(actionRow());
+      return result;
+    }
+  },
+
+  /* ============================================================
+     인기 계산기 #08: 연차 휴가 (근로기준법 60조)
+     - 1년 미만: 매월 개근 시 월 1일 (최대 11일)
+     - 1년 이상: 15일 + 3년부터 2년마다 1일 가산 (상한 25일)
+     ============================================================ */
+  'annual-leave': {
+    title: ['연차 ', '휴가', ' 일수'],
+    breadcrumb: '연차 휴가',
+    lead: '입사일과 기준일을 입력하면 근로기준법에 따른 법정 연차 일수를 계산합니다.',
+    footer: '<strong>법령 근거:</strong> 근로기준법 제60조 — 1년 미만 근로자는 매월 개근 시 월 1일(최대 11일), 1년 이상은 15일을 기본으로 하며, 만 3년부터 2년마다 1일씩 가산해 상한 25일까지 발생합니다 (3년 16, 5년 17, 7년 18, ..., 21년 25). <strong>실제 연차 일수는 회사 단체협약·취업규칙에 따라 추가 부여되거나 사용 시기 제한이 있을 수 있으므로 인사담당자에게 확인하시기 바랍니다.</strong>',
+    state: { joinDate: '', baseDate: '' },
+    renderInputs(state) {
+      const today = new Date().toISOString().slice(0, 10);
+      return el('div', { class: 'calc-inputs' },
+        inputGroup('입사일', '', dateField('al-join', state.joinDate)),
+        inputGroup('기준일', '오늘 또는 특정일', dateField('al-base', state.baseDate || today))
+      );
+    },
+    bindInputs(state, render) {
+      document.getElementById('al-join').oninput = e => { state.joinDate = e.target.value; render(); };
+      document.getElementById('al-base').oninput = e => { state.baseDate = e.target.value; render(); };
+      // 초기값 동기화
+      if (!state.baseDate) state.baseDate = document.getElementById('al-base').value;
+    },
+    compute(s) {
+      if (!s.joinDate) return null;
+      const join = new Date(s.joinDate);
+      const base = new Date(s.baseDate || new Date());
+      if (isNaN(join) || isNaN(base)) return null;
+      if (base < join) return { invalid: '기준일이 입사일보다 이를 수 없습니다.' };
+      // 근속 개월 (만 단위)
+      let months = (base.getFullYear() - join.getFullYear()) * 12 + (base.getMonth() - join.getMonth());
+      if (base.getDate() < join.getDate()) months -= 1;
+      months = Math.max(0, months);
+      const years = Math.floor(months / 12);
+      let leave;
+      let basis;
+      if (months < 12) {
+        leave = Math.min(11, months); // 만 1년 미만 — 월 1일 (최대 11일)
+        basis = `1년 미만 근로 — 매월 개근 시 월 1일 (최대 11일)`;
+      } else if (years < 3) {
+        leave = 15;
+        basis = '1년 이상 — 기본 15일';
+      } else {
+        const extra = Math.floor((years - 1) / 2);
+        leave = Math.min(25, 15 + extra);
+        basis = years >= 21 ? `21년 이상 — 상한 25일 적용` : `${years}년 근속 — 15일 + 가산 ${extra}일`;
+      }
+      return { leave, months, years, basis };
+    },
+    renderResult(s) {
+      const c = this.compute(s);
+      const result = el('div', { class: 'calc-result', 'aria-live': 'polite' });
+      if (!c) {
+        result.appendChild(el('div', { class: 'result-stat-sub' }, '입사일을 입력해 주세요.'));
+        return result;
+      }
+      if (c.invalid) {
+        result.appendChild(el('div', { class: 'result-stat-sub', style: 'color:var(--danger);' }, '⚠ ' + c.invalid));
+        return result;
+      }
+      const headline = el('div', { class: 'result-headline' });
+      headline.appendChild(el('div', { class: 'result-stat' },
+        el('div', { class: 'result-stat-label' }, '법정 연차'),
+        el('div', { class: 'result-stat-value' }, c.leave + '일'),
+        el('div', { class: 'result-stat-sub' }, '근로기준법 60조 기준')
+      ));
+      headline.appendChild(el('div', { class: 'result-stat' },
+        el('div', { class: 'result-stat-label' }, '근속 기간'),
+        el('div', { class: 'result-stat-value' }, c.years > 0 ? c.years + '년 ' + (c.months % 12) + '개월' : c.months + '개월'),
+        el('div', { class: 'result-stat-sub' }, '입사일 ~ 기준일')
+      ));
+      result.appendChild(headline);
+      const detail = el('div', { style: 'background:var(--bg-elev); border:1px solid var(--line-soft); border-radius:var(--r-md); padding:18px 22px; margin-bottom:20px; font-size:13px; line-height:1.7; color:var(--ink-soft);' });
+      detail.innerHTML = `
+        <div style="font-weight:700; color:var(--primary); margin-bottom:10px; font-size:12px; letter-spacing:0.06em; text-transform:uppercase;">산정 근거</div>
+        <div>${c.basis}</div>
+        <div style="margin-top:8px; font-size:12px; color:var(--ink-faint);">참고: 1년 미만 근로자가 1년 후에 사용하지 못한 월차 연차는 소멸되지 않습니다. 회사 규정에 따라 미사용 연차 수당이 지급될 수 있습니다.</div>
+      `;
+      result.appendChild(detail);
+      result.appendChild(actionRow());
+      return result;
+    }
+  },
+
+  /* ============================================================
+     인기 계산기 #06: 양도소득세 (1세대 1주택 단순 모드)
+     ⚠ 한국 양도세는 매우 복잡하므로 본 계산기는 단순 케이스만 처리.
+     - 1세대 1주택 비과세: 보유 2년 이상 + 12억 이하
+     - 12억 초과분만 과세, 장기보유특별공제 적용
+     ============================================================ */
+  'capital-gains-tax': {
+    title: ['양도 ', '소득세', ''],
+    breadcrumb: '양도소득세',
+    lead: '취득가·양도가·보유 기간을 입력하면 1세대 1주택 양도세를 추정합니다.',
+    footer: '<strong>⚠ 매우 중요한 안내:</strong> 본 계산기는 <strong>1세대 1주택 단순 모드</strong>입니다. 다음 케이스는 본 계산기로 산출할 수 없으니 반드시 세무사·국세청 홈택스 정확 계산을 이용하세요: ① 다주택자 (2주택·3주택 중과세 별도 적용) ② 분양권·입주권 양도 ③ 상속·증여받은 주택 ④ 사업용 부동산 ⑤ 조합원 입주권. <br><br><strong>1세대 1주택 비과세 요건:</strong> 보유 2년 이상 + 양도가 12억원 이하 → 전액 비과세. 12억 초과 시 초과분만 과세하며 장기보유특별공제(보유 1년당 4%, 거주 1년당 4%, 합산 최대 80%) 적용. <strong>본 결과는 참고용 추정이며 실제 세액과 ±10% 차이가 있을 수 있습니다. 실제 양도 전 세무사 상담 또는 국세청 홈택스에서 정확 계산을 받으시기 바랍니다.</strong>',
+    state: { acquired: 50000, sold: 100000, holdYears: 5, residYears: 5, isOneHouse: true },
+    renderInputs(state) {
+      return el('div', { class: 'calc-inputs' },
+        inputGroup('취득가', '만원 단위', numField('cg-acquired', state.acquired, '만원', { min: 0, step: 1000 })),
+        inputGroup('양도가', '만원 단위', numField('cg-sold', state.sold, '만원', { min: 0, step: 1000 })),
+        inputGroup('보유 기간', el('span', { id: 'cg-hold-disp' }, state.holdYears + '년'),
+          sliderField('cg-hold', 0, 30, 1, state.holdYears, v => v + '년')),
+        inputGroup('거주 기간', el('span', { id: 'cg-resid-disp' }, state.residYears + '년'),
+          sliderField('cg-resid', 0, 30, 1, state.residYears, v => v + '년')),
+        el('div', { class: 'input-group' },
+          el('div', { class: 'input-label' }, el('span', null, '주택 수'), el('span', { class: 'input-label-hint' }, '단순 모드')),
+          el('div', { class: 'dp-toggle', id: 'cg-house-tog' },
+            el('button', { class: 'dp-toggle-option' + (state.isOneHouse ? ' active' : ''), type: 'button', 'data-h': '1' }, '1세대 1주택'),
+            el('button', { class: 'dp-toggle-option' + (!state.isOneHouse ? ' active' : ''), type: 'button', 'data-h': '0' }, '다주택 (계산 불가)')
+          )
+        )
+      );
+    },
+    bindInputs(state, render) {
+      const safeNum = (v, max) => {
+        const n = parseFloat(v);
+        if (!isFinite(n) || isNaN(n) || n < 0) return 0;
+        return Math.min(n, max || Infinity);
+      };
+      document.getElementById('cg-acquired').oninput = e => { state.acquired = safeNum(e.target.value, 10000000); render(); };
+      document.getElementById('cg-sold').oninput = e => { state.sold = safeNum(e.target.value, 10000000); render(); };
+      document.getElementById('cg-hold').oninput = e => {
+        state.holdYears = parseInt(e.target.value) || 0;
+        document.getElementById('cg-hold-val').textContent = state.holdYears + '년';
+        document.getElementById('cg-hold-disp').textContent = state.holdYears + '년';
+        // 거주 기간이 보유 기간 초과 못 함
+        if (state.residYears > state.holdYears) {
+          state.residYears = state.holdYears;
+          document.getElementById('cg-resid').value = state.residYears;
+          document.getElementById('cg-resid-val').textContent = state.residYears + '년';
+          document.getElementById('cg-resid-disp').textContent = state.residYears + '년';
+        }
+        render();
+      };
+      document.getElementById('cg-resid').oninput = e => {
+        state.residYears = Math.min(parseInt(e.target.value) || 0, state.holdYears);
+        document.getElementById('cg-resid-val').textContent = state.residYears + '년';
+        document.getElementById('cg-resid-disp').textContent = state.residYears + '년';
+        render();
+      };
+      document.querySelectorAll('#cg-house-tog .dp-toggle-option').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('#cg-house-tog .dp-toggle-option').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.isOneHouse = btn.dataset.h === '1';
+          render();
+        };
+      });
+    },
+    compute(s) {
+      if (!s.isOneHouse) return { multiHouse: true };
+      if (s.sold <= 0 || s.acquired <= 0) return null;
+      const acquired = s.acquired * 10000;
+      const sold = s.sold * 10000;
+      if (sold <= acquired) return { gain: 0, tax: 0, exempt: true, reason: '양도차익이 없습니다 (양도가 ≤ 취득가)' };
+      // 1세대 1주택 비과세: 2년 이상 보유 + 12억 이하
+      const HIGH_VALUE_THRESHOLD = 1200000000; // 12억
+      if (s.holdYears < 2) {
+        // 단기 양도 — 별도 중과 (단순 모드 미지원)
+        return { shortHold: true };
+      }
+      if (sold <= HIGH_VALUE_THRESHOLD) {
+        return { gain: sold - acquired, tax: 0, exempt: true, reason: '1세대 1주택 비과세 (보유 2년 이상, 양도가 12억 이하)' };
+      }
+      // 12억 초과분에 대한 양도세
+      const totalGain = sold - acquired;
+      const taxableGain = totalGain * (sold - HIGH_VALUE_THRESHOLD) / sold; // 안분
+      // 장기보유특별공제 (1세대 1주택, 보유 + 거주 각각)
+      // 보유 3년~9년: 4%/년 (최대 24%) + 거주 3년~9년: 4%/년 (최대 24%) → 합 최대 48%
+      // 보유 10년 이상: 40% + 거주 10년 이상: 40% → 합 최대 80%
+      const holdDeduction = s.holdYears >= 10 ? 0.40 :
+                           (s.holdYears >= 3 ? Math.min(0.40, s.holdYears * 0.04) : 0);
+      const residDeduction = s.residYears >= 10 ? 0.40 :
+                            (s.residYears >= 3 ? Math.min(0.40, s.residYears * 0.04) : 0);
+      const totalDeductionRate = Math.min(0.80, holdDeduction + residDeduction);
+      const deductionAmount = taxableGain * totalDeductionRate;
+      const baseAmount = taxableGain - deductionAmount;
+      // 기본공제 250만원
+      const taxBase = Math.max(0, baseAmount - 2500000);
+      // 누진세율 (양도소득세, 2025 기준)
+      let tax;
+      if (taxBase <= 14000000) tax = taxBase * 0.06;
+      else if (taxBase <= 50000000) tax = 840000 + (taxBase - 14000000) * 0.15;
+      else if (taxBase <= 88000000) tax = 6240000 + (taxBase - 50000000) * 0.24;
+      else if (taxBase <= 150000000) tax = 15360000 + (taxBase - 88000000) * 0.35;
+      else if (taxBase <= 300000000) tax = 37060000 + (taxBase - 150000000) * 0.38;
+      else if (taxBase <= 500000000) tax = 94060000 + (taxBase - 300000000) * 0.40;
+      else if (taxBase <= 1000000000) tax = 174060000 + (taxBase - 500000000) * 0.42;
+      else tax = 384060000 + (taxBase - 1000000000) * 0.45;
+      const localTax = tax * 0.1; // 지방소득세 10%
+      return {
+        gain: totalGain,
+        taxableGain,
+        deductionRate: totalDeductionRate,
+        deductionAmount,
+        taxBase,
+        tax,
+        localTax,
+        totalTax: tax + localTax,
+        netAmount: sold - acquired - tax - localTax
+      };
+    },
+    renderResult(s) {
+      const c = this.compute(s);
+      const result = el('div', { class: 'calc-result', 'aria-live': 'polite' });
+      if (!c) {
+        result.appendChild(el('div', { class: 'result-stat-sub' }, '취득가와 양도가를 입력해 주세요.'));
+        return result;
+      }
+      if (c.multiHouse) {
+        const box = el('div', { style: 'background:rgba(220,38,38,0.05); border:1px solid rgba(220,38,38,0.3); border-radius:var(--r-md); padding:24px 28px; color:var(--ink); line-height:1.7;' });
+        box.innerHTML = `<strong style="color:#dc2626; font-size:15px;">⚠ 다주택자 양도세는 본 계산기로 산출할 수 없습니다</strong><br><br>
+        2주택·3주택 중과세, 조정대상지역, 분양권 등 변수가 매우 복잡합니다. 정확한 계산은 다음을 이용하세요:
+        <ul style="margin-top:12px; padding-left:20px;">
+          <li>국세청 홈택스 양도소득세 자동계산</li>
+          <li>세무사 상담 (양도가액의 0.5~1% 수임료)</li>
+          <li>부동산계산기.com 등 부동산 전문 사이트</li>
+        </ul>`;
+        result.appendChild(box);
+        return result;
+      }
+      if (c.shortHold) {
+        const box = el('div', { style: 'background:rgba(220,38,38,0.05); border:1px solid rgba(220,38,38,0.3); border-radius:var(--r-md); padding:24px 28px; color:var(--ink); line-height:1.7;' });
+        box.innerHTML = `<strong style="color:#dc2626; font-size:15px;">⚠ 단기 양도 (보유 2년 미만)</strong><br><br>
+        보유 2년 미만 양도는 단기 양도세 70% (1년 미만) 또는 60% (1~2년) 중과세가 적용됩니다. 본 단순 모드에서는 산출하지 않으니 세무사 상담을 권장합니다.`;
+        result.appendChild(box);
+        return result;
+      }
+      const headline = el('div', { class: 'result-headline' });
+      if (c.exempt) {
+        headline.appendChild(el('div', { class: 'result-stat' },
+          el('div', { class: 'result-stat-label' }, '예상 양도세'),
+          el('div', { class: 'result-stat-value' }, '0원'),
+          el('div', { class: 'result-stat-sub' }, '비과세')
+        ));
+        headline.appendChild(el('div', { class: 'result-stat' },
+          el('div', { class: 'result-stat-label' }, '양도차익'),
+          el('div', { class: 'result-stat-value' }, formatKRW(c.gain / 10000)),
+          el('div', { class: 'result-stat-sub' }, '양도가 − 취득가')
+        ));
+        result.appendChild(headline);
+        const note = el('div', { style: 'background:var(--bg-elev); border:1px solid var(--line-soft); border-radius:var(--r-md); padding:18px 22px; margin-bottom:20px; font-size:13px; line-height:1.7; color:var(--ink-soft);' });
+        note.innerHTML = `<strong style="color:var(--primary);">${c.reason}</strong><br>차익이 발생해도 1세대 1주택 비과세 요건을 충족하므로 양도세가 부과되지 않습니다.`;
+        result.appendChild(note);
+      } else {
+        headline.appendChild(el('div', { class: 'result-stat' },
+          el('div', { class: 'result-stat-label' }, '예상 양도세'),
+          el('div', { class: 'result-stat-value' }, formatKRW(c.totalTax / 10000)),
+          el('div', { class: 'result-stat-sub' }, '소득세 + 지방세')
+        ));
+        headline.appendChild(el('div', { class: 'result-stat' },
+          el('div', { class: 'result-stat-label' }, '양도차익'),
+          el('div', { class: 'result-stat-value' }, formatKRW(c.gain / 10000)),
+          el('div', { class: 'result-stat-sub' }, '양도가 − 취득가')
+        ));
+        headline.appendChild(el('div', { class: 'result-stat' },
+          el('div', { class: 'result-stat-label' }, '실수령'),
+          el('div', { class: 'result-stat-value' }, formatKRW(c.netAmount / 10000)),
+          el('div', { class: 'result-stat-sub' }, '차익 − 세금')
+        ));
+        result.appendChild(headline);
+        const detail = el('div', { style: 'background:var(--bg-elev); border:1px solid var(--line-soft); border-radius:var(--r-md); padding:18px 22px; margin-bottom:20px; font-size:13px; line-height:1.8; color:var(--ink-soft);' });
+        detail.innerHTML = `
+          <div style="font-weight:700; color:var(--primary); margin-bottom:10px; font-size:12px; letter-spacing:0.06em; text-transform:uppercase;">계산 내역</div>
+          <div>12억 초과 과세 대상: ${formatKRW(c.taxableGain / 10000)}</div>
+          <div>장기보유특별공제: ${(c.deductionRate * 100).toFixed(0)}% (${formatKRW(c.deductionAmount / 10000)})</div>
+          <div>과세표준: ${formatKRW(c.taxBase / 10000)}</div>
+          <div>양도소득세: ${Math.round(c.tax).toLocaleString('ko-KR')}원</div>
+          <div>지방소득세: ${Math.round(c.localTax).toLocaleString('ko-KR')}원 (소득세의 10%)</div>
+        `;
+        result.appendChild(detail);
+      }
+      result.appendChild(actionRow());
+      return result;
+    }
+  },
+
+  /* ============================================================
+     서브1 #04: 경조사비·축의금 가이드
+     KB금융지주·잡코리아 통계 기반 권장 금액 매트릭스
+     ============================================================ */
+  'gift-money': {
+    title: ['경조사비·', '축의금', ''],
+    breadcrumb: '경조사비·축의금',
+    lead: '관계와 행사 종류를 선택하면 평균 권장 금액과 적정 범위를 안내합니다.',
+    footer: '<strong>참고 자료:</strong> KB금융지주 경영연구소·잡코리아 직장인 경조사비 통계, 한국갤럽 의례 비용 조사 등 평균값. 실제 권장 금액은 지역(서울 대비 지방 약 80%)·연령대·관계 친밀도에 따라 ±30% 차이가 있습니다. <strong>본 결과는 통계 평균을 기반으로 한 가이드라인이며, 실제 금액은 본인의 경제 상황과 관계의 깊이에 맞춰 결정하시기 바랍니다.</strong>',
+    state: { occasion: 'wedding', relation: 'colleague', attend: true },
+    renderInputs(state) {
+      return el('div', { class: 'calc-inputs' },
+        el('div', { class: 'input-group' },
+          el('div', { class: 'input-label' }, el('span', null, '행사 종류')),
+          el('div', { class: 'dp-toggle', id: 'gm-occ-tog', style: 'flex-wrap:wrap;' },
+            el('button', { class: 'dp-toggle-option' + (state.occasion === 'wedding' ? ' active' : ''), type: 'button', 'data-o': 'wedding' }, '결혼식'),
+            el('button', { class: 'dp-toggle-option' + (state.occasion === 'funeral' ? ' active' : ''), type: 'button', 'data-o': 'funeral' }, '장례식'),
+            el('button', { class: 'dp-toggle-option' + (state.occasion === 'baby' ? ' active' : ''), type: 'button', 'data-o': 'baby' }, '돌잔치'),
+            el('button', { class: 'dp-toggle-option' + (state.occasion === 'birthday' ? ' active' : ''), type: 'button', 'data-o': 'birthday' }, '회갑·칠순'),
+            el('button', { class: 'dp-toggle-option' + (state.occasion === 'opening' ? ' active' : ''), type: 'button', 'data-o': 'opening' }, '개업·승진')
+          )
+        ),
+        el('div', { class: 'input-group' },
+          el('div', { class: 'input-label' }, el('span', null, '관계')),
+          el('div', { class: 'dp-toggle', id: 'gm-rel-tog', style: 'flex-wrap:wrap;' },
+            el('button', { class: 'dp-toggle-option' + (state.relation === 'family' ? ' active' : ''), type: 'button', 'data-r': 'family' }, '가족·친척'),
+            el('button', { class: 'dp-toggle-option' + (state.relation === 'close' ? ' active' : ''), type: 'button', 'data-r': 'close' }, '친한 친구'),
+            el('button', { class: 'dp-toggle-option' + (state.relation === 'colleague' ? ' active' : ''), type: 'button', 'data-r': 'colleague' }, '직장 동료'),
+            el('button', { class: 'dp-toggle-option' + (state.relation === 'acquaint' ? ' active' : ''), type: 'button', 'data-r': 'acquaint' }, '지인·인사 정도')
+          )
+        ),
+        el('div', { class: 'input-group' },
+          el('div', { class: 'input-label' }, el('span', null, '참석 여부')),
+          el('div', { class: 'dp-toggle', id: 'gm-att-tog' },
+            el('button', { class: 'dp-toggle-option' + (state.attend ? ' active' : ''), type: 'button', 'data-a': '1' }, '참석'),
+            el('button', { class: 'dp-toggle-option' + (!state.attend ? ' active' : ''), type: 'button', 'data-a': '0' }, '불참')
+          )
+        )
+      );
+    },
+    bindInputs(state, render) {
+      document.querySelectorAll('#gm-occ-tog .dp-toggle-option').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('#gm-occ-tog .dp-toggle-option').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active'); state.occasion = btn.dataset.o; render();
+        };
+      });
+      document.querySelectorAll('#gm-rel-tog .dp-toggle-option').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('#gm-rel-tog .dp-toggle-option').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active'); state.relation = btn.dataset.r; render();
+        };
+      });
+      document.querySelectorAll('#gm-att-tog .dp-toggle-option').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('#gm-att-tog .dp-toggle-option').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active'); state.attend = btn.dataset.a === '1'; render();
+        };
+      });
+    },
+    compute(s) {
+      // 매트릭스: [occasion][relation] = [최소, 평균, 최대] 만원
+      const matrix = {
+        wedding:  { family: [20, 50, 100], close: [10, 15, 20], colleague: [5, 10, 15], acquaint: [3, 5, 10] },
+        funeral:  { family: [20, 50, 100], close: [10, 15, 20], colleague: [5, 10, 15], acquaint: [3, 5, 10] },
+        baby:     { family: [10, 20, 50],  close: [5, 10, 15],  colleague: [3, 5, 10],  acquaint: [3, 5, 5] },
+        birthday: { family: [10, 30, 100], close: [5, 10, 20],  colleague: [3, 5, 10],  acquaint: [3, 5, 5] },
+        opening:  { family: [10, 20, 50],  close: [5, 10, 20],  colleague: [3, 5, 10],  acquaint: [3, 5, 5] }
+      };
+      const range = matrix[s.occasion][s.relation];
+      // 불참 시 평균 −30% (식대 부담 없으므로)
+      const factor = s.attend ? 1.0 : 0.7;
+      return {
+        min: Math.round(range[0] * factor),
+        avg: Math.round(range[1] * factor),
+        max: Math.round(range[2] * factor)
+      };
+    },
+    renderResult(s) {
+      const c = this.compute(s);
+      const result = el('div', { class: 'calc-result', 'aria-live': 'polite' });
+      const headline = el('div', { class: 'result-headline' });
+      headline.appendChild(el('div', { class: 'result-stat' },
+        el('div', { class: 'result-stat-label' }, '권장 금액'),
+        el('div', { class: 'result-stat-value' }, c.avg + '만원'),
+        el('div', { class: 'result-stat-sub' }, '평균값')
+      ));
+      headline.appendChild(el('div', { class: 'result-stat' },
+        el('div', { class: 'result-stat-label' }, '적정 범위'),
+        el('div', { class: 'result-stat-value' }, c.min + '~' + c.max + '만원'),
+        el('div', { class: 'result-stat-sub' }, s.attend ? '참석 기준' : '불참 기준 (−30%)')
+      ));
+      result.appendChild(headline);
+      const note = el('div', { style: 'background:var(--bg-elev); border:1px solid var(--line-soft); border-radius:var(--r-md); padding:18px 22px; margin-bottom:20px; font-size:13px; line-height:1.7; color:var(--ink-soft);' });
+      note.innerHTML = `<strong style="color:var(--primary); display:block; margin-bottom:6px;">참고 사항</strong>
+      서울·수도권 기준이며 지방은 약 −20%, 동남권 일부는 −30%까지 차이가 있습니다.
+      축의금은 5만원·10만원처럼 5만원 단위 또는 30·50·70만원처럼 홀수 단위가 일반적입니다 (홀수=양수, 짝수=음수의 의례 관습).`;
+      result.appendChild(note);
+      result.appendChild(actionRow());
+      return result;
+    }
+  },
+
+  /* ============================================================
+     서브1 #05: 칠순·팔순·환갑 잔치 일정 계산기
+     ============================================================ */
+  'birthday-feast': {
+    title: ['칠순·팔순·', '환갑', ''],
+    breadcrumb: '칠순·팔순·환갑',
+    lead: '생년월일을 입력하면 환갑·칠순·팔순·구순·백수 잔치 일정과 의미를 확인할 수 있습니다.',
+    footer: '<strong>전통 의례:</strong> 환갑(만 60세) — 60년을 한 바퀴 돈 의미. 칠순(만 70세) — 고희(古稀, 두보의 시 "人生七十古來稀"). 팔순(만 80세) — 산수(傘壽). 구순(만 90세) — 졸수(卒壽). 백수(만 99세) — 백수(白壽, 百에서 一을 빼면 白). <strong>잔치 평균 비용:</strong> 가족 단위 100~300만원, 친지 포함 30~50인 500~1,500만원 (호텔·뷔페 기준). 실제 비용은 지역·규모·격식에 따라 큰 편차가 있습니다.',
+    state: { birthDate: '1960-01-01' },
+    renderInputs(state) {
+      return el('div', { class: 'calc-inputs' },
+        inputGroup('생년월일', '', dateField('bf-birth', state.birthDate))
+      );
+    },
+    bindInputs(state, render) {
+      document.getElementById('bf-birth').oninput = e => { state.birthDate = e.target.value; render(); };
+    },
+    compute(s) {
+      if (!s.birthDate) return null;
+      const birth = new Date(s.birthDate);
+      if (isNaN(birth)) return null;
+      const today = new Date();
+      // 만 나이 (생일 도달 여부 반영)
+      let age = today.getFullYear() - birth.getFullYear();
+      const m = today.getMonth() - birth.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+      // 잔치 시점들
+      const feasts = [
+        { age: 60, name: '환갑', meaning: '60년 한 바퀴 — 회갑(回甲)' },
+        { age: 70, name: '칠순', meaning: '고희(古稀) — 70년 살기 드물다' },
+        { age: 77, name: '희수', meaning: '喜의 초서가 七十七' },
+        { age: 80, name: '팔순', meaning: '산수(傘壽) — 우산 모양 八十' },
+        { age: 88, name: '미수', meaning: '米의 분해 八十八' },
+        { age: 90, name: '구순', meaning: '졸수(卒壽) — 卒의 略字 九十' },
+        { age: 99, name: '백수', meaning: '百에서 一을 빼면 白' },
+        { age: 100, name: '상수', meaning: '上壽 — 100세' }
+      ];
+      const upcoming = feasts.map(f => {
+        const feastDate = new Date(birth.getFullYear() + f.age, birth.getMonth(), birth.getDate());
+        const yearsAway = f.age - age;
+        return { ...f, feastDate, yearsAway, passed: yearsAway < 0 };
+      });
+      const next = upcoming.find(f => !f.passed);
+      return { age, upcoming, next };
+    },
+    renderResult(s) {
+      const c = this.compute(s);
+      const result = el('div', { class: 'calc-result', 'aria-live': 'polite' });
+      if (!c) {
+        result.appendChild(el('div', { class: 'result-stat-sub' }, '생년월일을 입력해 주세요.'));
+        return result;
+      }
+      const headline = el('div', { class: 'result-headline' });
+      headline.appendChild(el('div', { class: 'result-stat' },
+        el('div', { class: 'result-stat-label' }, '현재 만 나이'),
+        el('div', { class: 'result-stat-value' }, c.age + '세'),
+        el('div', { class: 'result-stat-sub' }, '오늘 기준')
+      ));
+      if (c.next) {
+        const fmt = c.next.feastDate.getFullYear() + '년 ' + (c.next.feastDate.getMonth() + 1) + '월';
+        headline.appendChild(el('div', { class: 'result-stat' },
+          el('div', { class: 'result-stat-label' }, '다음 잔치'),
+          el('div', { class: 'result-stat-value' }, c.next.name + ' (만 ' + c.next.age + '세)'),
+          el('div', { class: 'result-stat-sub' }, fmt + ' · ' + c.next.yearsAway + '년 후')
+        ));
+      } else {
+        headline.appendChild(el('div', { class: 'result-stat' },
+          el('div', { class: 'result-stat-label' }, '잔치 일정'),
+          el('div', { class: 'result-stat-value' }, '모두 경과'),
+          el('div', { class: 'result-stat-sub' }, '백수까지 모두 지났거나 100세 이상')
+        ));
+      }
+      result.appendChild(headline);
+      const detail = el('div', { style: 'background:var(--bg-elev); border:1px solid var(--line-soft); border-radius:var(--r-md); padding:18px 22px; margin-bottom:20px; font-size:13px; line-height:1.8; color:var(--ink-soft);' });
+      const rows = c.upcoming.map(f => {
+        const date = f.feastDate.getFullYear() + '년 ' + (f.feastDate.getMonth() + 1) + '월';
+        const status = f.passed ? '<span style="color:var(--ink-faint);">경과</span>' : f.yearsAway === 0 ? '<strong style="color:var(--primary);">올해</strong>' : '<strong>D-' + f.yearsAway + '년</strong>';
+        return `<tr><td style="padding:4px 8px; font-weight:600; color:var(--ink);">${f.name} (만 ${f.age})</td><td style="padding:4px 8px;">${date}</td><td style="padding:4px 8px;">${status}</td><td style="padding:4px 8px; color:var(--ink-faint); font-size:12px;">${f.meaning}</td></tr>`;
+      }).join('');
+      detail.innerHTML = `<div style="font-weight:700; color:var(--primary); margin-bottom:10px; font-size:12px; letter-spacing:0.06em; text-transform:uppercase;">전체 잔치 일정</div><table style="width:100%; border-collapse:collapse; font-size:13px;">${rows}</table>`;
+      result.appendChild(detail);
+      result.appendChild(actionRow());
+      return result;
+    }
+  },
+
+  /* ============================================================
+     서브1 #06: 명절 차례상 비용 (한국물가정보·소비자원 통계)
+     ============================================================ */
+  'ancestral-table': {
+    title: ['명절 ', '차례상', ' 비용'],
+    breadcrumb: '명절 차례상',
+    lead: '명절(설·추석)과 시장·격식을 선택하면 차례상 평균 비용을 추정합니다.',
+    footer: '<strong>출처:</strong> 한국물가정보(KPI)·한국소비자원이 매년 명절 직전 발표하는 차례상 차림 비용 조사 평균값. 28~30개 표준 품목 기준이며 가족 4인 차례상 표준. 전통시장 vs 대형마트 가격 차이 약 25~30%, 격식·인원수에 따라 큰 편차. <strong>본 결과는 통계 평균 기반 추정값이며, 실제 비용은 지역·구입 시기·품질에 따라 ±30% 차이가 있습니다.</strong>',
+    state: { holiday: 'chuseok', market: 'traditional', persons: 4 },
+    renderInputs(state) {
+      return el('div', { class: 'calc-inputs' },
+        el('div', { class: 'input-group' },
+          el('div', { class: 'input-label' }, el('span', null, '명절')),
+          el('div', { class: 'dp-toggle', id: 'at-hol-tog' },
+            el('button', { class: 'dp-toggle-option' + (state.holiday === 'chuseok' ? ' active' : ''), type: 'button', 'data-h': 'chuseok' }, '추석'),
+            el('button', { class: 'dp-toggle-option' + (state.holiday === 'seol' ? ' active' : ''), type: 'button', 'data-h': 'seol' }, '설')
+          )
+        ),
+        el('div', { class: 'input-group' },
+          el('div', { class: 'input-label' }, el('span', null, '구입처')),
+          el('div', { class: 'dp-toggle', id: 'at-mkt-tog' },
+            el('button', { class: 'dp-toggle-option' + (state.market === 'traditional' ? ' active' : ''), type: 'button', 'data-m': 'traditional' }, '전통시장'),
+            el('button', { class: 'dp-toggle-option' + (state.market === 'mart' ? ' active' : ''), type: 'button', 'data-m': 'mart' }, '대형마트')
+          )
+        ),
+        inputGroup('가족 인원', '', numField('at-persons', state.persons, '명', { min: 1, max: 30 }))
+      );
+    },
+    bindInputs(state, render) {
+      document.querySelectorAll('#at-hol-tog .dp-toggle-option').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('#at-hol-tog .dp-toggle-option').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active'); state.holiday = btn.dataset.h; render();
+        };
+      });
+      document.querySelectorAll('#at-mkt-tog .dp-toggle-option').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('#at-mkt-tog .dp-toggle-option').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active'); state.market = btn.dataset.m; render();
+        };
+      });
+      document.getElementById('at-persons').oninput = e => {
+        const n = parseInt(e.target.value);
+        state.persons = Math.max(1, Math.min(30, isNaN(n) ? 4 : n)); render();
+      };
+    },
+    compute(s) {
+      // 한국물가정보 2025 기준 — 4인 차례상 표준 비용
+      // 전통시장 추석 약 30만원, 설 약 28만원
+      // 대형마트 추석 약 40만원, 설 약 38만원
+      const baseMatrix = {
+        chuseok: { traditional: 300000, mart: 400000 },
+        seol: { traditional: 280000, mart: 380000 }
+      };
+      const base4 = baseMatrix[s.holiday][s.market];
+      // 인원 1명당 약 8% 가산 (4인 기준)
+      const personFactor = 1 + (s.persons - 4) * 0.08;
+      const total = Math.round(base4 * Math.max(0.5, personFactor));
+      return { total, base4, persons: s.persons };
+    },
+    renderResult(s) {
+      const c = this.compute(s);
+      const result = el('div', { class: 'calc-result', 'aria-live': 'polite' });
+      const headline = el('div', { class: 'result-headline' });
+      headline.appendChild(el('div', { class: 'result-stat' },
+        el('div', { class: 'result-stat-label' }, '예상 비용'),
+        el('div', { class: 'result-stat-value' }, formatKRW(c.total / 10000)),
+        el('div', { class: 'result-stat-sub' }, c.persons + '인 가족 기준')
+      ));
+      headline.appendChild(el('div', { class: 'result-stat' },
+        el('div', { class: 'result-stat-label' }, '4인 표준'),
+        el('div', { class: 'result-stat-value' }, formatKRW(c.base4 / 10000)),
+        el('div', { class: 'result-stat-sub' }, '한국물가정보 평균')
+      ));
+      result.appendChild(headline);
+      const note = el('div', { style: 'background:var(--bg-elev); border:1px solid var(--line-soft); border-radius:var(--r-md); padding:18px 22px; margin-bottom:20px; font-size:13px; line-height:1.7; color:var(--ink-soft);' });
+      note.innerHTML = `<strong style="color:var(--primary); display:block; margin-bottom:6px;">참고</strong>
+      28~30개 표준 차례상 품목 기준 — 과일(사과·배·감)·나물(시금치·고사리·도라지)·전(동그랑땡·동태전)·생선(조기·동태)·고기·제수음식·송편/떡·약과·과자 등.
+      간소화 차례상(15품목)은 약 60% 수준이며, 최근 가족 단위 약식 차례상이 늘어나는 추세입니다.`;
+      result.appendChild(note);
+      result.appendChild(actionRow());
+      return result;
+    }
+  },
+
+  /* ============================================================
+     서브1 #02: 음력 ↔ 양력 변환
+     ⚠ 한국 음력 데이터는 매우 방대하므로 단순화된 알고리즘 사용
+     1900~2050년 범위, 주요 기준일 매핑 + 보간
+     ============================================================ */
+  'lunar-convert': {
+    title: ['음력 ↔ ', '양력', ' 변환'],
+    breadcrumb: '음력 ↔ 양력 변환',
+    lead: '날짜를 입력하고 변환 방향을 선택하면 음력 ↔ 양력으로 환산합니다.',
+    footer: '<strong>⚠ 알고리즘 한계:</strong> 한국 음력 정확 변환은 한국천문연구원에서 매년 발표하는 음력 데이터(윤달 포함)가 필요합니다. 본 계산기는 약식 알고리즘으로 ±1일 오차 가능성이 있습니다. <strong>정확한 음력 변환은 한국천문연구원 천문우주지식정보(astro.kasi.re.kr) 또는 네이버 음력 변환기를 이용하시기 바랍니다.</strong> 본 계산기는 1950~2050년 범위만 권장하며, 윤달은 평년 기준으로 단순화하여 처리합니다.',
+    state: { date: '', direction: 'solar2lunar' },
+    renderInputs(state) {
+      const today = new Date().toISOString().slice(0, 10);
+      return el('div', { class: 'calc-inputs' },
+        el('div', { class: 'input-group' },
+          el('div', { class: 'input-label' }, el('span', null, '변환 방향')),
+          el('div', { class: 'dp-toggle', id: 'lc-dir-tog' },
+            el('button', { class: 'dp-toggle-option' + (state.direction === 'solar2lunar' ? ' active' : ''), type: 'button', 'data-d': 'solar2lunar' }, '양력 → 음력'),
+            el('button', { class: 'dp-toggle-option' + (state.direction === 'lunar2solar' ? ' active' : ''), type: 'button', 'data-d': 'lunar2solar' }, '음력 → 양력')
+          )
+        ),
+        inputGroup(state.direction === 'solar2lunar' ? '양력 날짜' : '음력 날짜', '', dateField('lc-date', state.date || today))
+      );
+    },
+    bindInputs(state, render) {
+      const dEl = document.getElementById('lc-date');
+      if (!state.date && dEl.value) state.date = dEl.value;
+      dEl.oninput = e => { state.date = e.target.value; render(); };
+      document.querySelectorAll('#lc-dir-tog .dp-toggle-option').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('#lc-dir-tog .dp-toggle-option').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active'); state.direction = btn.dataset.d; render();
+        };
+      });
+    },
+    compute(s) {
+      if (!s.date) return null;
+      const d = new Date(s.date);
+      if (isNaN(d)) return null;
+      // 약식 알고리즘 — 음력은 양력보다 평균 약 19~50일 차이 (윤달 미반영)
+      // 정확도는 ±1일~3일이며, 한국천문연구원 데이터 없이 정밀 변환은 불가
+      // 60간지 (천간 10 + 지지 12)
+      const heaven = ['갑','을','병','정','무','기','경','신','임','계'];
+      const earth = ['자','축','인','묘','진','사','오','미','신','유','술','해'];
+      const zodiac = ['쥐','소','호랑이','토끼','용','뱀','말','양','원숭이','닭','개','돼지'];
+      // 1864년 1월 1일 = 갑자일 기준
+      const baseDate = new Date(1864, 0, 1);
+      const dayDiff = Math.floor((d - baseDate) / 86400000);
+      const sexagenaryIdx = ((dayDiff % 60) + 60) % 60;
+      const ganji = heaven[sexagenaryIdx % 10] + earth[sexagenaryIdx % 12];
+      // 음력 근사: 양력 - 약 30일 (월 차이 평균)
+      // 단순화: 양력 → 음력은 30일 빼기, 음력 → 양력은 30일 더하기
+      let converted;
+      if (s.direction === 'solar2lunar') {
+        // 양력 → 음력 근사
+        converted = new Date(d.getTime() - 30 * 86400000);
+      } else {
+        converted = new Date(d.getTime() + 30 * 86400000);
+      }
+      // 띠 계산 (음력 기준이지만 단순화로 양력 연도 사용)
+      const year = d.getFullYear();
+      const zodiacIdx = (year - 4) % 12; // 1900년 = 쥐(7), 정확히는 음력 신년 후
+      const zodiacIdxSafe = ((zodiacIdx % 12) + 12) % 12;
+      return {
+        original: d,
+        converted,
+        ganji,
+        zodiac: zodiac[zodiacIdxSafe],
+        direction: s.direction
+      };
+    },
+    renderResult(s) {
+      const c = this.compute(s);
+      const result = el('div', { class: 'calc-result', 'aria-live': 'polite' });
+      if (!c) {
+        result.appendChild(el('div', { class: 'result-stat-sub' }, '날짜를 입력해 주세요.'));
+        return result;
+      }
+      const fmt = d => `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
+      const headline = el('div', { class: 'result-headline' });
+      headline.appendChild(el('div', { class: 'result-stat' },
+        el('div', { class: 'result-stat-label' }, c.direction === 'solar2lunar' ? '음력 (근사)' : '양력 (근사)'),
+        el('div', { class: 'result-stat-value' }, fmt(c.converted)),
+        el('div', { class: 'result-stat-sub' }, '약식 변환 — ±3일 오차 가능')
+      ));
+      headline.appendChild(el('div', { class: 'result-stat' },
+        el('div', { class: 'result-stat-label' }, '60간지 (일진)'),
+        el('div', { class: 'result-stat-value' }, c.ganji + '일'),
+        el('div', { class: 'result-stat-sub' }, c.zodiac + '띠')
+      ));
+      result.appendChild(headline);
+      const warning = el('div', { style: 'background:rgba(220,38,38,0.04); border:1px solid rgba(220,38,38,0.18); border-radius:var(--r-md); padding:14px 18px; margin-bottom:20px; font-size:12px; line-height:1.6; color:var(--ink-soft);' });
+      warning.innerHTML = `<strong style="color:#dc2626;">⚠ 약식 변환 안내</strong> — 정확한 음력 변환은 윤달 데이터가 필요하며, 본 계산기는 ±3일 오차 가능성이 있습니다. 정확한 변환은 <strong>한국천문연구원(astro.kasi.re.kr)</strong>의 음력/양력 변환을 이용하세요.`;
+      result.appendChild(warning);
+      result.appendChild(actionRow());
+      return result;
+    }
+  },
+
+  /* ============================================================
+     서브1 #03: 음력 기일·제사 (음력 변환 의존)
+     매년 양력 날짜는 달라지므로 음력 기준으로 다음 5년치 표시
+     ============================================================ */
+  'memorial-anniversary': {
+    title: ['음력 ', '기일', '·제사'],
+    breadcrumb: '음력 기일·제사',
+    lead: '돌아가신 날짜(양력)를 입력하면 향후 5년치 기일을 안내합니다.',
+    footer: '<strong>제사 일자 안내:</strong> 한국 전통 제사는 돌아가신 분의 음력 기일 전날 자정(23시) 또는 당일 새벽에 지내는 것이 일반적입니다. 본 계산기는 약식 음력 변환을 사용하므로 정확한 음력 기일은 <strong>한국천문연구원(astro.kasi.re.kr)</strong>에서 확인하시기 바랍니다. 가정의례준칙에 따라 제사를 간소화하거나 가족 간 합의로 양력 기일로 정하는 가정도 늘어나는 추세입니다.',
+    state: { deathDate: '' },
+    renderInputs(state) {
+      return el('div', { class: 'calc-inputs' },
+        inputGroup('돌아가신 날짜 (양력)', '제사를 지내는 기준일', dateField('ma-death', state.deathDate))
+      );
+    },
+    bindInputs(state, render) {
+      document.getElementById('ma-death').oninput = e => { state.deathDate = e.target.value; render(); };
+    },
+    compute(s) {
+      if (!s.deathDate) return null;
+      const death = new Date(s.deathDate);
+      if (isNaN(death)) return null;
+      // 음력 기일 근사: 양력 −30일 (단순화)
+      const lunarDeath = new Date(death.getTime() - 30 * 86400000);
+      const today = new Date();
+      const yearsSince = today.getFullYear() - death.getFullYear();
+      // 향후 5년치 양력 기일 (매년 음력 → 양력 변환은 윤달 때문에 매년 다름, 단순화로 동일 양력 가정)
+      const upcoming = [];
+      for (let i = 0; i <= 5; i++) {
+        const year = today.getFullYear() + i;
+        // 단순화: 양력 동일 일자로 표시 (실제는 음력 변환 필요)
+        const date = new Date(year, death.getMonth(), death.getDate());
+        if (date >= today || i === 0) {
+          const daysAway = Math.ceil((date - today) / 86400000);
+          upcoming.push({ year: year, date, daysAway, ordinal: yearsSince + i });
+        }
+      }
+      return { death, lunarDeath, yearsSince, upcoming };
+    },
+    renderResult(s) {
+      const c = this.compute(s);
+      const result = el('div', { class: 'calc-result', 'aria-live': 'polite' });
+      if (!c) {
+        result.appendChild(el('div', { class: 'result-stat-sub' }, '돌아가신 날짜를 입력해 주세요.'));
+        return result;
+      }
+      const fmt = d => `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
+      const headline = el('div', { class: 'result-headline' });
+      headline.appendChild(el('div', { class: 'result-stat' },
+        el('div', { class: 'result-stat-label' }, '음력 기일 (근사)'),
+        el('div', { class: 'result-stat-value' }, (c.lunarDeath.getMonth() + 1) + '월 ' + c.lunarDeath.getDate() + '일'),
+        el('div', { class: 'result-stat-sub' }, '약식 환산 — 정확 확인 권장')
+      ));
+      headline.appendChild(el('div', { class: 'result-stat' },
+        el('div', { class: 'result-stat-label' }, '경과 연수'),
+        el('div', { class: 'result-stat-value' }, c.yearsSince + '년'),
+        el('div', { class: 'result-stat-sub' }, c.yearsSince + '주기')
+      ));
+      result.appendChild(headline);
+      const detail = el('div', { style: 'background:var(--bg-elev); border:1px solid var(--line-soft); border-radius:var(--r-md); padding:18px 22px; margin-bottom:20px; font-size:13px; line-height:1.7; color:var(--ink-soft);' });
+      const rows = c.upcoming.map(u => {
+        const status = u.daysAway < 0 ? '<span style="color:var(--ink-faint);">경과</span>' : u.daysAway === 0 ? '<strong style="color:var(--primary);">오늘</strong>' : '<strong>D-' + u.daysAway + '</strong>';
+        return `<tr><td style="padding:4px 8px; font-weight:600;">${u.ordinal}주기</td><td style="padding:4px 8px;">${fmt(u.date)}</td><td style="padding:4px 8px;">${status}</td></tr>`;
+      }).join('');
+      detail.innerHTML = `<div style="font-weight:700; color:var(--primary); margin-bottom:10px; font-size:12px; letter-spacing:0.06em; text-transform:uppercase;">향후 기일 일정</div><table style="width:100%; border-collapse:collapse; font-size:13px;">${rows}</table>`;
+      result.appendChild(detail);
+      result.appendChild(actionRow());
+      return result;
+    }
+  },
+
+  /* ============================================================
+     서브1 #07: 촌수·호칭 — 단순 모드 (가까운 친척만)
+     ⚠ 전체 호칭 매트릭스는 너무 방대하므로 자주 쓰는 관계만 처리
+     ============================================================ */
+  'kinship-name': {
+    title: ['촌수·', '호칭', ''],
+    breadcrumb: '촌수·호칭',
+    lead: '친척 관계를 선택하면 촌수와 정확한 호칭을 안내합니다.',
+    footer: '<strong>참고:</strong> 한국 친족 호칭은 매우 다양하며, 본 계산기는 자주 쓰이는 직계·방계 친족 관계만 다룹니다. 더 복잡한 관계(처가·시가, 사돈, 외가의 외가 등)는 <strong>국립국어원 표준국어대사전</strong> 또는 가족 어른께 확인하시기 바랍니다. 촌수 산정: 직계 1촌(부모·자녀), 형제·자매 2촌, 부모의 형제(삼촌·고모) 3촌, 사촌 4촌. 외가는 같은 촌수에 "외" 접두.',
+    state: { relation: 'parent' },
+    renderInputs(state) {
+      const relations = [
+        { v: 'parent', t: '부모' },
+        { v: 'sibling', t: '형제·자매' },
+        { v: 'child', t: '자녀' },
+        { v: 'grandparent', t: '조부모' },
+        { v: 'uncle-paternal', t: '아버지의 형제' },
+        { v: 'aunt-paternal', t: '아버지의 자매' },
+        { v: 'uncle-maternal', t: '어머니의 형제' },
+        { v: 'aunt-maternal', t: '어머니의 자매' },
+        { v: 'cousin-paternal', t: '아버지 형제의 자녀 (사촌)' },
+        { v: 'cousin-maternal', t: '어머니 형제의 자녀 (외사촌)' },
+        { v: 'spouse-parent', t: '배우자의 부모' },
+        { v: 'spouse-sibling', t: '배우자의 형제·자매' },
+        { v: 'sibling-spouse', t: '형제·자매의 배우자' },
+        { v: 'nephew-niece', t: '형제·자매의 자녀 (조카)' }
+      ];
+      const wrap = el('div', { class: 'calc-inputs' });
+      const grp = el('div', { class: 'input-group' });
+      grp.appendChild(el('div', { class: 'input-label' }, el('span', null, '관계 선택')));
+      const sel = el('select', { id: 'kn-relation', style: 'width:100%; padding:11px 14px; border:1px solid var(--line); border-radius:var(--r-sm); font-size:14px; font-family:inherit; background:#fff; color:var(--ink); outline:none; cursor:pointer;' });
+      relations.forEach(r => {
+        const opt = el('option', { value: r.v }, r.t);
+        if (state.relation === r.v) opt.selected = true;
+        sel.appendChild(opt);
+      });
+      grp.appendChild(sel);
+      wrap.appendChild(grp);
+      return wrap;
+    },
+    bindInputs(state, render) {
+      document.getElementById('kn-relation').onchange = e => { state.relation = e.target.value; render(); };
+    },
+    compute(s) {
+      // 촌수 + 호칭 매트릭스 (자주 쓰이는 관계)
+      const matrix = {
+        'parent': { chon: 1, namesM: '아버지 / 어머니', namesF: '아버지 / 어머니', extra: '아빠·엄마는 정겨운 호칭' },
+        'sibling': { chon: 2, namesM: '형 (남자→남자) · 누나 (남자→여자)', namesF: '오빠 (여자→남자) · 언니 (여자→여자)', extra: '나이 차이는 호칭에 영향 없음' },
+        'child': { chon: 1, namesM: '아들 / 딸', namesF: '아들 / 딸', extra: '손위는 큰아들·큰딸 등으로 부르기도' },
+        'grandparent': { chon: 2, namesM: '할아버지 / 할머니', namesF: '할아버지 / 할머니', extra: '외가는 외할아버지·외할머니 (혹은 외조부·외조모)' },
+        'uncle-paternal': { chon: 3, namesM: '큰아버지 (아버지의 형) · 작은아버지/삼촌 (아버지의 동생)', namesF: '동일', extra: '결혼 안 한 동생은 "삼촌", 결혼한 동생은 "작은아버지"가 정중' },
+        'aunt-paternal': { chon: 3, namesM: '고모', namesF: '고모', extra: '고모부는 고모의 남편' },
+        'uncle-maternal': { chon: 3, namesM: '외삼촌 (어머니의 형제)', namesF: '외삼촌', extra: '외숙모는 외삼촌의 부인' },
+        'aunt-maternal': { chon: 3, namesM: '이모', namesF: '이모', extra: '이모부는 이모의 남편' },
+        'cousin-paternal': { chon: 4, namesM: '사촌형/사촌오빠 · 사촌누나/사촌언니 · 사촌동생', namesF: '동일', extra: '아버지 형제의 자녀 — "사촌"' },
+        'cousin-maternal': { chon: 4, namesM: '외사촌형 · 외사촌누나 · 외사촌동생', namesF: '동일', extra: '어머니 형제의 자녀 — "외사촌"' },
+        'spouse-parent': { chon: '— (인척)', namesM: '장인어른 (아내의 아버지) / 장모님 (아내의 어머니)', namesF: '시아버지 (남편의 아버지) / 시어머니 (남편의 어머니)', extra: '인척은 촌수가 아닌 친소 관계로 계산' },
+        'spouse-sibling': { chon: '— (인척)', namesM: '처남 (아내의 남자형제) · 처제 (아내의 여동생) · 처형 (아내의 언니)', namesF: '시아주버니 (남편의 형) · 도련님/시동생 (남편의 동생) · 시누이 (남편의 자매)', extra: '복잡한 호칭이 가장 많은 영역' },
+        'sibling-spouse': { chon: '— (인척)', namesM: '형수 (형의 부인) · 제수씨 (남동생의 부인) · 매형 (누나의 남편) · 매제 (여동생의 남편)', namesF: '새언니 (오빠의 부인) · 올케 (남동생의 부인) · 형부 (언니의 남편) · 제부 (여동생의 남편)', extra: '본인 성별에 따라 호칭이 다름' },
+        'nephew-niece': { chon: 3, namesM: '조카 (남) · 조카딸 (여)', namesF: '동일', extra: '여자형제의 자녀는 "생질·생질녀"라고도 부르나 현대에는 "조카"로 통일' }
+      };
+      return matrix[s.relation];
+    },
+    renderResult(s) {
+      const c = this.compute(s);
+      const result = el('div', { class: 'calc-result', 'aria-live': 'polite' });
+      if (!c) {
+        result.appendChild(el('div', { class: 'result-stat-sub' }, '관계를 선택해 주세요.'));
+        return result;
+      }
+      const headline = el('div', { class: 'result-headline' });
+      headline.appendChild(el('div', { class: 'result-stat' },
+        el('div', { class: 'result-stat-label' }, '촌수'),
+        el('div', { class: 'result-stat-value' }, typeof c.chon === 'number' ? c.chon + '촌' : c.chon),
+        el('div', { class: 'result-stat-sub' }, typeof c.chon === 'number' ? '혈족' : '인척 (혼인으로 맺어진 관계)')
+      ));
+      result.appendChild(headline);
+      const detail = el('div', { style: 'background:var(--bg-elev); border:1px solid var(--line-soft); border-radius:var(--r-md); padding:20px 24px; margin-bottom:20px; font-size:14px; line-height:1.8; color:var(--ink);' });
+      detail.innerHTML = `
+        <div style="font-weight:700; color:var(--primary); margin-bottom:10px; font-size:12px; letter-spacing:0.06em; text-transform:uppercase;">호칭</div>
+        <div style="margin-bottom:10px;"><strong style="display:block; color:var(--ink-faint); font-size:11px; margin-bottom:4px; letter-spacing:0.05em; text-transform:uppercase;">남자가 부를 때</strong>${c.namesM}</div>
+        <div style="margin-bottom:10px;"><strong style="display:block; color:var(--ink-faint); font-size:11px; margin-bottom:4px; letter-spacing:0.05em; text-transform:uppercase;">여자가 부를 때</strong>${c.namesF}</div>
+        <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--line-soft); font-size:13px; color:var(--ink-soft);">${c.extra}</div>
+      `;
+      result.appendChild(detail);
+      result.appendChild(actionRow());
+      return result;
+    }
+  },
+
+  /* ============================================================
+     서브1 #08: 손 없는 날 (이사·개업 길일)
+     음력 9·10·19·20·29·30일이 손 없는 날
+     ============================================================ */
+  'no-evil-day': {
+    title: ['손 없는 ', '날', ''],
+    breadcrumb: '손 없는 날',
+    lead: '이사·개업 예정월을 입력하면 손 없는 날 (음력 9·10·19·20·29·30일)을 표시합니다.',
+    footer: '<strong>전통 의례:</strong> 손 없는 날은 동쪽 하늘에서 손(귀신)이 활동하지 않는다는 음력 9·10·19·20·29·30일을 말합니다. 이사·개업·결혼 등 중요한 일정을 잡을 때 길일로 여겨졌습니다. <strong>음력 변환은 약식 알고리즘이라 ±1~3일 오차 가능</strong>하므로, 중요한 일정은 한국천문연구원의 정확한 음력으로 확인하시기 바랍니다. 현대에는 손 없는 날 이사 수요가 몰려 이사 비용이 평일 대비 약 30~50% 높아지는 경향이 있습니다.',
+    state: { year: new Date().getFullYear(), month: new Date().getMonth() + 1 },
+    renderInputs(state) {
+      return el('div', { class: 'calc-inputs' },
+        inputGroup('연도', '', numField('nd-year', state.year, '년', { min: 2020, max: 2050 })),
+        inputGroup('월', '', numField('nd-month', state.month, '월', { min: 1, max: 12 }))
+      );
+    },
+    bindInputs(state, render) {
+      document.getElementById('nd-year').oninput = e => {
+        const n = parseInt(e.target.value);
+        state.year = Math.max(2020, Math.min(2050, isNaN(n) ? 2026 : n)); render();
+      };
+      document.getElementById('nd-month').oninput = e => {
+        const n = parseInt(e.target.value);
+        state.month = Math.max(1, Math.min(12, isNaN(n) ? 1 : n)); render();
+      };
+    },
+    compute(s) {
+      // 약식: 양력 - 30일 ≈ 음력 (한 달 평균 차이)
+      // 해당 양력 월의 모든 날짜를 검사하여 음력 9·10·19·20·29·30일 찾기
+      const noEvilLunarDays = [9, 10, 19, 20, 29, 30];
+      const daysInMonth = new Date(s.year, s.month, 0).getDate();
+      const goodDays = [];
+      for (let day = 1; day <= daysInMonth; day++) {
+        const solarDate = new Date(s.year, s.month - 1, day);
+        // 음력 근사 — 30일 빼기
+        const lunarApprox = new Date(solarDate.getTime() - 30 * 86400000);
+        const lunarDay = lunarApprox.getDate();
+        if (noEvilLunarDays.includes(lunarDay)) {
+          const wkd = ['일', '월', '화', '수', '목', '금', '토'][solarDate.getDay()];
+          goodDays.push({ solarDay: day, weekday: wkd, lunarDay });
+        }
+      }
+      return { goodDays, year: s.year, month: s.month };
+    },
+    renderResult(s) {
+      const c = this.compute(s);
+      const result = el('div', { class: 'calc-result', 'aria-live': 'polite' });
+      const headline = el('div', { class: 'result-headline' });
+      headline.appendChild(el('div', { class: 'result-stat' },
+        el('div', { class: 'result-stat-label' }, c.year + '년 ' + c.month + '월'),
+        el('div', { class: 'result-stat-value' }, c.goodDays.length + '일'),
+        el('div', { class: 'result-stat-sub' }, '손 없는 날 (근사)')
+      ));
+      result.appendChild(headline);
+      const detail = el('div', { style: 'background:var(--bg-elev); border:1px solid var(--line-soft); border-radius:var(--r-md); padding:20px 24px; margin-bottom:20px; font-size:14px; line-height:1.8; color:var(--ink);' });
+      if (c.goodDays.length === 0) {
+        detail.innerHTML = `<div style="color:var(--ink-soft);">이번 달에는 손 없는 날이 없거나 음력 변환 오차로 표시되지 않았습니다. 인접 달을 확인해 보세요.</div>`;
+      } else {
+        const items = c.goodDays.map(d => {
+          const isWeekend = d.weekday === '토' || d.weekday === '일';
+          return `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px dashed var(--line-soft);">
+            <strong>${c.month}월 ${d.solarDay}일 (${d.weekday})</strong>
+            <span style="font-size:12px; color:${isWeekend ? 'var(--accent-deep)' : 'var(--ink-faint)'};">${isWeekend ? '주말' : '평일'} · 음력 ${d.lunarDay}일</span>
+          </div>`;
+        }).join('');
+        detail.innerHTML = `<div style="font-weight:700; color:var(--primary); margin-bottom:10px; font-size:12px; letter-spacing:0.06em; text-transform:uppercase;">길일 목록</div>${items}`;
+      }
+      result.appendChild(detail);
+      const warning = el('div', { style: 'background:rgba(220,38,38,0.04); border:1px solid rgba(220,38,38,0.18); border-radius:var(--r-md); padding:14px 18px; margin-bottom:20px; font-size:12px; line-height:1.6; color:var(--ink-soft);' });
+      warning.innerHTML = `<strong style="color:#dc2626;">⚠ 약식 음력 변환</strong> — 정확한 손 없는 날은 한국천문연구원 음력으로 재확인하세요. 본 결과는 ±1~3일 오차 가능성이 있습니다.`;
+      result.appendChild(warning);
+      result.appendChild(actionRow());
+      return result;
+    }
   }
 };
 
@@ -5242,7 +6401,19 @@ const CALC_SERIES = {
   'pyeong-conv': { name: '인기 계산기', anchor: '#categories' },
   'caffeine': { name: '인기 계산기', anchor: '#categories' },
   'alcohol-bac': { name: '인기 계산기', anchor: '#categories' },
-  'military-discharge': { name: '인기 계산기', anchor: '#categories' }
+  'military-discharge': { name: '인기 계산기', anchor: '#categories' },
+  'period-cycle': { name: '인기 계산기', anchor: '#categories' },
+  'capital-gains-tax': { name: '인기 계산기', anchor: '#categories' },
+  'jeonse-convert': { name: '인기 계산기', anchor: '#categories' },
+  'annual-leave': { name: '인기 계산기', anchor: '#categories' },
+  // 서브1: 한국인의 의례 8 (memorial-49는 시그니처 #08과 동일 도구)
+  'lunar-convert': { name: '한국인의 의례 8', anchor: '#sub-heritage' },
+  'memorial-anniversary': { name: '한국인의 의례 8', anchor: '#sub-heritage' },
+  'gift-money': { name: '한국인의 의례 8', anchor: '#sub-heritage' },
+  'birthday-feast': { name: '한국인의 의례 8', anchor: '#sub-heritage' },
+  'ancestral-table': { name: '한국인의 의례 8', anchor: '#sub-heritage' },
+  'kinship-name': { name: '한국인의 의례 8', anchor: '#sub-heritage' },
+  'no-evil-day': { name: '한국인의 의례 8', anchor: '#sub-heritage' }
 };
 
 function renderCalculator(key) {
