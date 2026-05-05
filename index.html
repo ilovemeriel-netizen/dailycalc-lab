@@ -6491,6 +6491,8 @@ document.querySelectorAll('.chip[data-calc-link], .bento-card[data-calc-link], .
 /* ============================================================
    카테고리 드롭다운 — PC hover (CSS) + 클릭 토글 (JS)
    PC에선 hover와 click 둘 다 작동, 모바일에선 click 작동
+   버그 수정: 클릭으로 열린 .open 상태에서 다른 카테고리로 hover 이동 시
+   기존 .open이 잔존하여 두 드롭다운이 동시 표시되는 현상 해결
    ============================================================ */
 (function() {
   const wraps = document.querySelectorAll('.cat-nav-item-wrap');
@@ -6513,6 +6515,17 @@ document.querySelectorAll('.chip[data-calc-link], .bento-card[data-calc-link], .
       });
       drop.classList.toggle('open', !isOpen);
       btn.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    // 다른 카테고리로 hover 진입 시 기존 .open 클래스 제거
+    // (클릭으로 열린 드롭다운 + 새 카테고리 hover로 인한 겹침 방지)
+    wrap.addEventListener('mouseenter', () => {
+      document.querySelectorAll('.cat-dropdown.open').forEach(d => {
+        if (d !== drop) {
+          d.classList.remove('open');
+          d.parentElement?.querySelector('.cat-nav-item')?.setAttribute('aria-expanded', 'false');
+        }
+      });
     });
   });
 
@@ -6695,7 +6708,11 @@ const VBCALCS = {
       const inputs = vbcEl('div', { class: 'vbc-inputs' });
       const f1 = vbcEl('div', { class: 'vbc-field' });
       f1.appendChild(vbcEl('label', { class: 'vbc-field-label' }, '총 결제 금액'));
-      const i1 = vbcEl('input', { type: 'number', placeholder: '0', value: state.total || '', min: '0', step: '1000' });
+      // value 속성 안 설정 시 → rerender의 raw value 보존 로직이 사용자 입력을 그대로 유지함.
+      // state.total을 input value로 다시 쓰지 않으므로, 사용자가 빠르게 타이핑할 때
+      // 정수 변환·반올림에 의한 표시 불일치 (예: "380000" → "83") 발생하지 않음
+      const i1 = vbcEl('input', { type: 'number', placeholder: '0', min: '0', step: '1000' });
+      i1.value = state.total ? String(state.total) : '';
       i1.oninput = e => { state.total = +e.target.value || 0; rerender(); };
       f1.appendChild(i1);
       inputs.appendChild(f1);
@@ -7001,7 +7018,51 @@ function openVbcalc(key) {
   vbcStage.appendChild(body);
 
   const state = { ...def.state };
-  function rerender() { def.render(state, body, rerender); }
+  function rerender() {
+    // 재렌더 전에 현재 활성 input의 포커스 정보 + 값 저장
+    const active = document.activeElement;
+    let focusInfo = null;
+    if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA') && body.contains(active)) {
+      const allInputs = Array.from(body.querySelectorAll('input, textarea'));
+      const idx = allInputs.indexOf(active);
+      // 커서 위치(selectionRange)는 text/search/url/tel/password/textarea 같은 텍스트 입력 타입에서만 안전하게 보존 가능.
+      // number/email/date 등은 브라우저별로 selectionRange가 null이거나 setSelectionRange 호출 시
+      // 커서가 강제 0번으로 리셋되는 회귀 버그 발생 — 따라서 이 타입들은 focus만 복원.
+      const TEXT_TYPES = ['text', 'search', 'url', 'tel', 'password', 'textarea'];
+      const isTextType = active.tagName === 'TEXTAREA' || TEXT_TYPES.includes(active.type);
+      focusInfo = {
+        idx,
+        type: active.type,
+        isTextType,
+        // 사용자가 방금 입력한 raw value 자체를 보존 — render() 안에서 state→value 변환 과정의
+        // 자릿수 손실/정수 변환 부작용으로부터 사용자 입력을 보호
+        rawValue: active.value,
+        selectionStart: isTextType ? active.selectionStart : null,
+        selectionEnd: isTextType ? active.selectionEnd : null
+      };
+    }
+    def.render(state, body, rerender);
+    // 재렌더 후 동일 위치 input에 포커스 복원
+    if (focusInfo) {
+      const newInputs = Array.from(body.querySelectorAll('input, textarea'));
+      const target = newInputs[focusInfo.idx];
+      if (target && target.type === focusInfo.type) {
+        // 사용자가 방금 입력한 raw value를 정확히 복원 (정수 변환·반올림으로 인한 표시 불일치 방지)
+        // 예: 사용자가 "380000" 타이핑 중 — render에서 state.total=380000을 다시 입력값으로 쓰면 정상이지만,
+        // 다른 input의 값이 변하면서 같은 input에 영향을 주는 race condition 가능 → raw 복원으로 차단
+        if (target.value !== focusInfo.rawValue) {
+          target.value = focusInfo.rawValue;
+        }
+        target.focus();
+        // 텍스트 타입에만 커서 위치 복원 (number/date 타입에서 절대 호출하지 않음)
+        if (focusInfo.isTextType && focusInfo.selectionStart !== null) {
+          try {
+            target.setSelectionRange(focusInfo.selectionStart, focusInfo.selectionEnd);
+          } catch (e) { /* 일부 환경에서 무시 */ }
+        }
+      }
+    }
+  }
   rerender();
 
   vbcStage.classList.add('open');
